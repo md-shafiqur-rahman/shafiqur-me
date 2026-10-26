@@ -729,6 +729,8 @@ html[data-theme="light"] .form__note.is-ok { color: #12813f; }
 .faq__a > :last-child { margin-bottom: 0; }
 
 #faq .post-cta { margin-top: 32px; }
+.post-faq { margin-top: 48px; }
+.post-faq h2 { margin-bottom: 18px; font-size: clamp(24px, 3vw, 30px); }
 
 /* Floating chat + back to top -------------------------------------------- */
 

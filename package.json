@@ -1,0 +1,21 @@
+{
+  "name": "shafiqur-me",
+  "private": true,
+  "scripts": {
+    "dev": "tinacms dev -c \"python3 -m http.server 8766\"",
+    "build": "tinacms build && python3 scripts/build.py && python3 scripts/dist.py",
+    "build:local": "tinacms build --local --skip-cloud-checks && python3 scripts/build.py && python3 scripts/dist.py"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "tinacms": "^3.15.0"
+  },
+  "devDependencies": {
+    "@tinacms/cli": "^4.0.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.2": true,
+    "better-sqlite3@12.11.1": true
+  }
+}

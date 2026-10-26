@@ -12,18 +12,25 @@ Plain static HTML, CSS and JavaScript. Hosted on Vercel. The contact and chat fo
 - `/blog/` articles, generated from `content/blog/*.md`
 - `/projects/` case studies, generated from `content/projects/*.md` (screenshots and `workflow.json` live in `projects/<slug>/`)
 
-## Add or edit an article
+## Writing articles
 
-1. Add a Markdown file to `content/blog/`, using the same front matter as the existing ones (`title`, `excerpt`, `date`, `category`, `readTime`, `published`).
-2. Rebuild:
+Articles are written in the TinaCMS editor at `/admin/` (log in with your Tina Cloud account). Saving commits the Markdown file to `content/blog/` on GitHub, and Vercel rebuilds the site.
 
-   ```
-   pip install markdown-it-py
-   python3 scripts/build.py
-   ```
+Fields: title (H1), meta title, meta description, slug (the file name), date, category, published/draft, FAQ (adds FAQ schema), and the content.
 
-The build regenerates every page, `sitemap.xml` and `llms.txt`.
+To run the editor on your own computer (no login needed, saves to local files):
 
-## Deploying
+```
+npm install
+npm run dev
+```
 
-Vercel publishes the repo as a static site. Commit the rebuilt pages and push; Vercel deploys automatically.
+Then open http://localhost:8766/admin/index.html
+
+## Build
+
+`npm run build` builds the editor, generates every page, `sitemap.xml` and `llms.txt` (`scripts/build.py`), and copies the publishable site to `dist/` (`scripts/dist.py`). Python libraries are bundled in `scripts/vendor/`, so no `pip install` is needed.
+
+## Vercel
+
+Settings come from `vercel.json`. Add two environment variables in Vercel (Settings → Environment Variables): `TINA_CLIENT_ID` and `TINA_TOKEN`, both from app.tina.io.

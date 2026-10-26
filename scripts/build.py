@@ -5,9 +5,11 @@ Articles live in content/blog/*.md, case studies in content/projects/*.md.
 """
 import sys, os, re, json, shutil, html, datetime
 
-from markdown_it import MarkdownIt  # pip install markdown-it-py
-
 HERE = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(HERE, 'vendor'))  # bundled markdown-it-py and PyYAML
+from markdown_it import MarkdownIt
+import yaml
+
 OUT = os.path.dirname(HERE)
 CONTENT = os.path.join(OUT, 'content')
 SITE = 'https://shafiqur.me'
@@ -533,21 +535,13 @@ urls.append((page('local-seo', 'Local SEO for Woodworking Businesses (US & UK) �
 def front(path):
     raw = open(path, encoding='utf-8').read()
     m = re.match(r'---\n(.*?)\n---\n?(.*)', raw, flags=re.S)
-    data, key, sub = {}, None, None
-    for line in m.group(1).split('\n'):
-        if not line.strip():
-            continue
-        m2 = re.match(r'^(\w+):\s*(.*)$', line)
-        if m2:
-            key, val, sub = m2.group(1), m2.group(2).strip(), None
-            data[key] = {} if val == '' else json.loads(val) if val.startswith('[') else (val == 'true') if val in ('true', 'false') else val.strip('"')
-            continue
-        m3 = re.match(r'^\s+(\w+):\s*$', line)
-        if m3:
-            sub = m3.group(1); data[key][sub] = []; continue
-        m4 = re.match(r'^\s+-\s+(.*)$', line)
-        if m4 and sub:
-            data[key][sub].append(m4.group(1).strip())
+    data = yaml.safe_load(m.group(1)) or {}
+    # The editor saves dates as full timestamps; pages only need the day.
+    if data.get('date'):
+        data['date'] = str(data['date'])[:10]
+    for k, v in list(data.items()):
+        if v is None:
+            data[k] = ''
     return data, m.group(2)
 
 
@@ -556,6 +550,12 @@ def render(body, prefix):
     out = re.sub(r'href="(?:https?://shafiqur\.dev)?/(blog|projects)/([\w-]+)/?"', lambda m: 'href="%s%s/%s/"' % (prefix, m.group(1), m.group(2)), out)
     out = out.replace('<table>', '<div class="table-wrap"><table>').replace('</table>', '</table></div>')
     return re.sub(r'<a href="(https?://[^"]+)"', r'<a href="\1" target="_blank" rel="noopener noreferrer"', out)
+
+
+def post_faq(items):
+    if not items:
+        return ''
+    return '            <section class="post-faq">\n                <h2>Frequently asked questions</h2>\n' + faq_block(items).replace(' reveal', '') + '            </section>\n'
 
 
 nice_date = lambda d: datetime.date.fromisoformat(d).strftime('%b %-d, %Y')
@@ -572,8 +572,21 @@ for f in sorted(os.listdir(os.path.join(CONTENT, 'blog'))):
         data.update(slug=f[:-3], body=body); posts.append(data)
 posts.sort(key=lambda p: p['date'], reverse=True)
 
+# Remove pages of articles that were deleted, renamed or switched back to draft
+live = {p['slug'] for p in posts}
+blog_dir = os.path.join(OUT, 'blog')
+for d in os.listdir(blog_dir) if os.path.isdir(blog_dir) else []:
+    if os.path.isdir(os.path.join(blog_dir, d)) and d not in live:
+        shutil.rmtree(os.path.join(blog_dir, d))
+
 for p in posts:
     rel = 'blog/' + p['slug']
+    faqs = [(f['question'], '<p>%s</p>' % esc(f['answer']).replace('\n\n', '</p><p>').replace('\n', '<br>'))
+            for f in (p.get('faq') or []) if f and f.get('question') and f.get('answer')]
+    schema = [{'@context': 'https://schema.org', '@type': 'BlogPosting', 'headline': p['title'], 'description': p['excerpt'],
+               'datePublished': p['date'], 'author': PERSON, 'mainEntityOfPage': '%s/%s/' % (SITE, rel)}]
+    if faqs:
+        schema.append(faq_schema(faqs))
     body = '''        <article class="wrap wrap--narrow">
             <a class="crumb" href="../"><i class="fa-solid fa-arrow-left"></i> All articles</a>
             <header class="post-head">
@@ -584,13 +597,12 @@ for p in posts:
             </header>
             <div class="prose">
 %s            </div>
-%s        </article>
+%s%s        </article>
 ''' % (esc(tag(p['category'])), esc(p['title']), esc(p['excerpt']), p['date'], nice_date(p['date']), esc(p.get('readTime', '5 min read')),
-       render(p['body'], '../../'),
+       render(p['body'], '../../'), post_faq(faqs),
        cta_block('../../', 'Want this built for your business?', 'Book a free 30-minute strategy call. I\'ll audit your current workflows and show you exactly where automation can save you time and money.').replace('                ', '            ', 1))
-    urls.append((page(rel, '%s — Md Shafiqur Rahman' % p['title'], p['excerpt'], body, 'Blog', 'article', main_cls='page', schema=[
-        {'@context': 'https://schema.org', '@type': 'BlogPosting', 'headline': p['title'], 'description': p['excerpt'],
-         'datePublished': p['date'], 'author': PERSON, 'mainEntityOfPage': '%s/%s/' % (SITE, rel)}]), p['date']))
+    title = p.get('seoTitle') or '%s — Md Shafiqur Rahman' % p['title']
+    urls.append((page(rel, title, p['excerpt'], body, 'Blog', 'article', main_cls='page', schema=schema), p['date']))
 
 cards = ''.join('''                <a class="card post-card" href="%s/">
                     <span class="tool-tag">%s</span>

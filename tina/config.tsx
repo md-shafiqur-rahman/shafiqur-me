@@ -22,7 +22,6 @@ const slugify = (text: string) =>
 const LIST = 'div.flex-wrap:has(> div input[name="title"])';
 const MAIN = [
   ':has(input[name="title"])',
-  ':has(input[name="filename"])',
   ":has([data-slate-editor])",
   ':has([data-test="list-faq"])',
   '[data-test="list-faq"]',
@@ -41,6 +40,13 @@ const SIDEBAR_CSS = `
   ${LIST} > div:has(.sidebar-head) { margin-top: 18px !important; border-top: 1px solid #e5e7eb; border-radius: 10px 10px 0 0; padding-top: 0 !important; }
   ${LIST} > div:has(.sidebar-head):first-child { margin-top: 0 !important; }
   ${LIST} > div:has(+ div .sidebar-head), ${LIST} > div:has(+ div input[name="title"]) { border-bottom: 1px solid #e5e7eb; border-radius: 0 0 10px 10px; padding-bottom: 14px !important; }
+  /* New article only: the slug box sits at the top of the sidebar */
+  ${LIST} { position: relative; }
+  ${LIST}:has(input[name="filename"]) > div:first-child { margin-top: 150px !important; }
+  ${LIST} > div:has(input[name="filename"]) {
+    position: absolute; top: 0; right: 0; float: none; height: 132px; overflow: hidden;
+    border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px 16px !important;
+  }
   ${MAIN} {
     float: none; clear: none; width: auto; margin: 0 364px 22px 0 !important;
     padding: 0 !important; background: none; border: 0; border-radius: 0;
@@ -194,7 +200,7 @@ export default defineConfig({
           filename: {
             readonly: false,
             slugify: (values) => slugify(values?.title),
-            description: "This is the slug. The article's address will be shafiqur.me/blog/<slug>/. Don't change it after publishing.",
+            description: "The URL slug: shafiqur.me/blog/your-slug/. Don't change it after publishing.",
           },
         },
         fields: [

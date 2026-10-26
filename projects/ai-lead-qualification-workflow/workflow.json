@@ -1,0 +1,176 @@
+{
+  "name": "AI Lead Qualification & CRM Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-intake",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook — New Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://company.clearbit.com/v2/companies/find",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "Authorization", "value": "Bearer {{$credentials.clearbitApiKey}}" }
+          ]
+        },
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "domain", "value": "={{$json.email.split('@')[1]}}" }
+          ]
+        }
+      },
+      "id": "clearbit-enrich",
+      "name": "Clearbit — Enrich Company",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "messages": {
+          "values": [
+            {
+              "role": "system",
+              "content": "You are a lead scoring assistant. Score leads as HOT, WARM, or COLD based on company size, industry, and intent signals. Return a JSON object with: score (HOT/WARM/COLD), reason (one sentence), and email_opening (personalized first line for outreach email)."
+            },
+            {
+              "role": "user",
+              "content": "Lead: {{$json.name}} from {{$json.company}}. Email: {{$json.email}}. Message: {{$json.message}}. Company data: employees={{$node['Clearbit — Enrich Company'].json.metrics.employees}}, industry={{$node['Clearbit — Enrich Company'].json.category.industry}}"
+            }
+          ]
+        },
+        "options": {
+          "responseFormat": "json_object"
+        }
+      },
+      "id": "gpt4-score",
+      "name": "GPT-4o — Score & Classify Lead",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [720, 300]
+    },
+    {
+      "parameters": {
+        "resource": "contact",
+        "operation": "upsert",
+        "email": "={{$node['Webhook — New Lead'].json.email}}",
+        "additionalFields": {
+          "firstname": "={{$node['Webhook — New Lead'].json.name.split(' ')[0]}}",
+          "lastname": "={{$node['Webhook — New Lead'].json.name.split(' ')[1]}}",
+          "company": "={{$node['Webhook — New Lead'].json.company}}",
+          "lead_score": "={{JSON.parse($node['GPT-4o — Score & Classify Lead'].json.message.content).score}}"
+        }
+      },
+      "id": "hubspot-upsert",
+      "name": "HubSpot — Create/Update Contact",
+      "type": "n8n-nodes-base.hubspot",
+      "typeVersion": 2,
+      "position": [960, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{JSON.parse($node['GPT-4o — Score & Classify Lead'].json.message.content).score}}",
+              "operation": "equals",
+              "value2": "HOT"
+            }
+          ]
+        }
+      },
+      "id": "if-hot-lead",
+      "name": "IF — Is HOT Lead?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1200, 300]
+    },
+    {
+      "parameters": {
+        "channel": "#sales-leads",
+        "text": "🔥 *HOT Lead Alert!*\n\n*Name:* {{$node['Webhook — New Lead'].json.name}}\n*Company:* {{$node['Webhook — New Lead'].json.company}}\n*Email:* {{$node['Webhook — New Lead'].json.email}}\n*Score Reason:* {{JSON.parse($node['GPT-4o — Score & Classify Lead'].json.message.content).reason}}\n\n<{{$node['HubSpot — Create/Update Contact'].json.properties.hs_object_id ? 'https://app.hubspot.com/contacts/' + $node['HubSpot — Create/Update Contact'].json.properties.hs_object_id : '#'}}|View in HubSpot →>",
+        "username": "Lead Bot",
+        "otherOptions": {}
+      },
+      "id": "slack-alert",
+      "name": "Slack — Alert Sales Team",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.2,
+      "position": [1440, 180]
+    },
+    {
+      "parameters": {
+        "fromEmail": "shafiqur.dev@gmail.com",
+        "toEmail": "={{$node['Webhook — New Lead'].json.email}}",
+        "subject": "Re: Your inquiry — let's connect",
+        "emailType": "html",
+        "message": "<p>Hi {{$node['Webhook — New Lead'].json.name.split(' ')[0]}},</p><p>{{JSON.parse($node['GPT-4o — Score & Classify Lead'].json.message.content).email_opening}}</p><p>I'd love to schedule a quick 30-minute call to understand your needs better. Would any of these times work for you?</p><p>Looking forward to connecting,<br/>Shafiqur Rahman<br/>AI Automation Expert</p>"
+      },
+      "id": "gmail-send",
+      "name": "Gmail — Send Personalized Follow-up",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [1440, 420]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "{\"status\": \"success\", \"message\": \"Lead processed successfully\"}"
+      },
+      "id": "respond-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [1680, 300]
+    }
+  ],
+  "connections": {
+    "Webhook — New Lead": {
+      "main": [[{ "node": "Clearbit — Enrich Company", "type": "main", "index": 0 }]]
+    },
+    "Clearbit — Enrich Company": {
+      "main": [[{ "node": "GPT-4o — Score & Classify Lead", "type": "main", "index": 0 }]]
+    },
+    "GPT-4o — Score & Classify Lead": {
+      "main": [[{ "node": "HubSpot — Create/Update Contact", "type": "main", "index": 0 }]]
+    },
+    "HubSpot — Create/Update Contact": {
+      "main": [[{ "node": "IF — Is HOT Lead?", "type": "main", "index": 0 }]]
+    },
+    "IF — Is HOT Lead?": {
+      "main": [
+        [{ "node": "Slack — Alert Sales Team", "type": "main", "index": 0 }],
+        [{ "node": "Gmail — Send Personalized Follow-up", "type": "main", "index": 0 }]
+      ]
+    },
+    "Slack — Alert Sales Team": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    },
+    "Gmail — Send Personalized Follow-up": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "author": "Md Shafiqur Rahman — shafiqur.dev",
+    "description": "AI-powered lead qualification: captures leads → enriches with Clearbit → scores with GPT-4o → updates HubSpot → alerts sales on Slack → sends personalized email. All within 60 seconds.",
+    "n8nVersion": "1.x",
+    "note": "Replace all credential placeholders with your own API keys. See shafiqur.dev/projects/ai-lead-qualification-workflow for full setup guide."
+  }
+}

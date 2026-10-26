@@ -1,0 +1,2010 @@
+{
+  "name": "Job Store And Alert",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "filterByFormula": "={Checking Status Career Page} = \"\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        256,
+        -32
+      ],
+      "id": "78d179fc-cac5-4e5a-996b-eed2cd83fc4e",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        448,
+        -32
+      ],
+      "id": "c7f200cb-c97d-49b3-9755-2c54d1e4cc0f",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v2/scrape",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_FIRECRAWL_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": \"{{ $json['Career Page Link'] }}\",\n  \"formats\": [\n    {\n      \"type\": \"json\",\n      \"schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"jobs\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"title\": { \"type\": \"string\" },\n                \"url\": { \"type\": \"string\" },\n                \"location\": { \"type\": \"string\" },\n                \"publishedDate\": { \"type\": \"string\" }\n              },\n              \"required\": [\"title\", \"url\"]\n            }\n          }\n        },\n        \"required\": [\"jobs\"]\n      },\n      \"prompt\": \"Extract ONLY the job postings listed on this page. Return ONLY the JSON that matches the schema. Include every job shown. Each job must include a title and an absolute job detail/apply URL. If location or published date is not shown, return empty string. Do not include any other fields.\"\n    }\n  ],\n  \"onlyMainContent\": false,\n  \"timeout\": 180000\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        656,
+        80
+      ],
+      "id": "a52586f8-d56e-42cb-adbc-353199c8590f",
+      "name": "Get Career Page Jobs"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get jobs array from Firecrawl JSON output\n// Firecrawl v2 returns structured data under: data.json.jobs\nconst jobs = $json?.data?.json?.jobs || [];\n\nlet text = '';\nlet i = 1;\n\n// Loop through each job and build a single text block\nfor (const j of jobs) {\n  const title = (j.title || '').trim();\n  const url = (j.url || '').trim();\n  const location = (j.location || '').trim();\n  const publishedDate = (j.publishedDate || '').trim();\n\n  // Skip invalid jobs (must have at least title and url)\n  if (!title || !url) continue;\n\n  // Append job data in a readable multi-line format\n  text +=\n`job_${i}\n${title}\n${url}\n${location}\n${publishedDate}\n\n`;\n  i++;\n}\n\n// Fallback: if no jobs were extracted, store the career page URL instead\nif (!text.trim()) {\n  text = $('Search records').item.json['Career Page Link'] || '';\n}\n\n// Return ONLY ONE item so Google Sheets updates a single cell\nreturn [\n  {\n    json: {\n      SaveJob: text.trim(),   // All jobs combined into one string\n      jobCount: i - 1         // Total number of valid jobs found\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        832,
+        144
+      ],
+      "id": "f25fc122-9a50-420e-8072-fb65cdb15eb8",
+      "name": "Parse Jobs"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $('Search records').item.json.id }}",
+            "Last Checking Date": "={{ new Date().toLocaleDateString('en-GB').replace(/\\//g, '-') }}",
+            "Checking Status Career Page": "Done",
+            "Save Job Career Page": "={{ $json.SaveJob }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Career Page Link",
+              "displayName": "Career Page Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company Linkedin  URL",
+              "displayName": "Company Linkedin  URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job Career Page",
+              "displayName": "Save Job Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Save Job linkedin",
+              "displayName": "Save Job linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "New Unique Job ",
+              "displayName": "New Unique Job ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Last Checking Date",
+              "displayName": "Last Checking Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Checking Status Career Page",
+              "displayName": "Checking Status Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Checking Status Linkedin",
+              "displayName": "Checking Status Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        992,
+        208
+      ],
+      "id": "0803898b-3af0-4b07-bc9a-6c95b5f6083a",
+      "name": "Create or update a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        -48
+      ],
+      "id": "750ddc3b-568f-46f6-9c9a-3665cc6a1895",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "filterByFormula": "={Checking Status Linkedin} = \"\"",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1376,
+        16
+      ],
+      "id": "68dd5553-6730-4970-8647-fa6ccfb3a057",
+      "name": "Search records1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        1568,
+        64
+      ],
+      "id": "c60e3753-3c95-4dd2-ba37-fbac6484b841",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/harvestapi~linkedin-job-search/run-sync-get-dataset-items?token=YOUR_APIFY_API_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"company\": [\n        \"{{ $json['Company Linkedin  URL'] }}\"\n    ],\n    \"easyApply\": false,\n    \"maxItems\": 10,\n    \"sortBy\": \"date\",\n    \"under10Applicants\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        1776,
+        128
+      ],
+      "id": "ddf3dd98-e0b0-476f-8873-e880076ac7a3",
+      "name": "Get Linkedin Jobs",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// All job items from the actor/HTTP node\nconst items = $input.all();\nconst jobs = items.map(i => i.json);\n\n// ✅ Pull the current loop item (the company row) using $item(0)\n// This returns the data of the current execution item flowing through the loop\nconst loop = $item(0).$node[\"Loop Over Items1\"].json;\n\n// ✅ Use the exact key name from your sheet: \"Linkedin Page Link\"\nconst linkedInPageLink = loop[\"Company Linkedin  URL\"] || \"\";\n\n// ✅ Company name will be taken from loop, otherwise from the job node's company.name\nconst companyName =\n  loop[\"Company Name\"] ||\n  items?.[0]?.json?.company?.name ||\n  \"\";\n\nconst rowNumber = loop[\"id\"] ?? null;\n\nlet text = '';\nlet i = 1;\n\nfor (const j of jobs) {\n  const title = (j.title || '').trim();\n  const url = (j.linkedinUrl || j.linkedInUrl || '').trim();\n\n  // location handling (sometimes object)\n  let location = '';\n  if (typeof j.location === 'string') location = j.location.trim();\n  else if (j.location?.linkedinText) location = String(j.location.linkedinText).trim();\n  else location = (j.headerCaptionText || '').split('·')[0].trim();\n\n  const publishedDate = (j.postedDate || '').split('T')[0];\n\n  if (!title || !url) continue;\n\n  text += `job_${i}\\n${title}\\n${url}\\n${location}\\n${publishedDate}\\n\\n`;\n  i++;\n}\n\nif (!text.trim()) text = 'No LinkedIn jobs found';\n\n// ✅ Return ONE item but KEEP loop fields\nreturn [{\n  json: {\n    row_number: rowNumber,\n    \"Company Name\": companyName,\n    \"Company Linkedin  URL\": linkedInPageLink,\n    SaveJob: text.trim(),\n    jobCount: i - 1,\n    source: \"linkedin\"\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        176
+      ],
+      "id": "3306da61-2dce-420e-b3a4-d7363f2a3ae8",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ $json.row_number }}",
+            "Last Checking Date": "={{ new Date().toLocaleDateString('en-GB').replace(/\\//g, '-') }}",
+            "Checking Status Linkedin": "Done",
+            "Save Job linkedin": "={{ $json.SaveJob }}",
+            "Company Name": "={{ $json['Company Name'] }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Career Page Link",
+              "displayName": "Career Page Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company Linkedin  URL",
+              "displayName": "Company Linkedin  URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job Career Page",
+              "displayName": "Save Job Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job linkedin",
+              "displayName": "Save Job linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "New Unique Job ",
+              "displayName": "New Unique Job ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Last Checking Date",
+              "displayName": "Last Checking Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Checking Status Career Page",
+              "displayName": "Checking Status Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Checking Status Linkedin",
+              "displayName": "Checking Status Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2144,
+        224
+      ],
+      "id": "4fe51716-9d61-4221-a40a-26860002aa12",
+      "name": "Create or update a record1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## 1 - For Store Job\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 1072,
+        "width": 2480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        0,
+        -368
+      ],
+      "typeVersion": 1,
+      "id": "a5516445-9f9c-45e4-b059-3e58fc8f5cb9",
+      "name": "Sticky Note3"
+    },
+    {
+      "parameters": {
+        "content": "## Career Page Scan & Save Jobs\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 656,
+        "width": 1264,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        64,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "d3346e29-9b3f-4f23-a9ed-02f12ec61783",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "content": "## Linkedin Page Scan & Save Jobs\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 656,
+        "width": 1024,
+        "color": 7
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1328,
+        -176
+      ],
+      "typeVersion": 1,
+      "id": "9d1d1b69-a8d4-4bfb-bc14-5fe60e29e9d7",
+      "name": "Sticky Note1"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -784,
+        1056
+      ],
+      "id": "04acb03c-631d-4224-a0bf-ee55b39ab9ed",
+      "name": "Job Alert"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        -784,
+        1200
+      ],
+      "id": "07ecde60-0647-4a26-9c56-a55818b24fc2",
+      "name": "Search records2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "cf835ed4-9444-4a1c-853e-fcd0d7bc2557",
+              "leftValue": "={{ \n$json[\"Last Checking Date\"] \n? DateTime.fromFormat($json[\"Last Checking Date\"], \"dd-MM-yyyy\").toFormat(\"dd-MM-yyyy\") \n: \"\" \n}}",
+              "rightValue": "={{ $now.toFormat(\"dd-MM-yyyy\") }}",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -784,
+        1344
+      ],
+      "id": "e4567f7f-19aa-41d9-b493-dc45911d2cc9",
+      "name": "Skip Today's Leads"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -464,
+        1328
+      ],
+      "id": "6525fd2e-ed5e-432d-aaaf-08fed80cc6bd",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.firecrawl.dev/v2/scrape",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_FIRECRAWL_API_KEY"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"url\": \"{{ $json['Career Page Link'] }}\",\n  \"formats\": [\n    {\n      \"type\": \"json\",\n      \"schema\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"jobs\": {\n            \"type\": \"array\",\n            \"items\": {\n              \"type\": \"object\",\n              \"properties\": {\n                \"title\": { \"type\": \"string\" },\n                \"url\": { \"type\": \"string\" },\n                \"location\": { \"type\": \"string\" },\n                \"publishedDate\": { \"type\": \"string\" }\n              },\n              \"required\": [\"title\", \"url\"]\n            }\n          }\n        },\n        \"required\": [\"jobs\"]\n      },\n      \"prompt\": \"Extract ONLY the job postings listed on this page. Return ONLY the JSON that matches the schema. Include every job shown. Each job must include a title and an absolute job detail/apply URL. If location or published date is not shown, return empty string. Do not include any other fields.\"\n    }\n  ],\n  \"onlyMainContent\": false,\n  \"timeout\": 180000\n}\n",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        880,
+        1712
+      ],
+      "id": "6785ee05-43ef-4a5c-91c3-c2cfd29b27a7",
+      "name": "Scrape Career Page"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get jobs array from Firecrawl JSON output\n// Firecrawl v2 returns structured data under: data.json.jobs\nconst jobs = $json?.data?.json?.jobs || [];\n\nlet text = '';\nlet i = 1;\n\n// Loop through each job and build a single text block\nfor (const j of jobs) {\n  const title = (j.title || '').trim();\n  const url = (j.url || '').trim();\n  const location = (j.location || '').trim();\n  const publishedDate = (j.publishedDate || '').trim();\n\n  // Skip invalid jobs (must have at least title and url)\n  if (!title || !url) continue;\n\n  // Append job data in a readable multi-line format\n  text +=\n`job_${i}\n${title}\n${url}\n${location}\n${publishedDate}\n\n`;\n  i++;\n}\n\n// Fallback: if no jobs were extracted, store the career page URL instead\nif (!text.trim()) {\n  text = $('Get row(s) in sheet4').item.json['Career Page Link'] || '';\n}\n\n// Return ONLY ONE item so Google Sheets updates a single cell\nreturn [\n  {\n    json: {\n      NewJobCareerPage: text.trim(),   // All jobs combined into one string\n      jobCount: i - 1         // Total number of valid jobs found\n    }\n  }\n];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1072,
+        1760
+      ],
+      "id": "83f7ea93-3e93-4304-ab9b-0252cb908bb1",
+      "name": "Parse Jobs Career Page"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Save Job Career Page": "={{ $json.NewJobCareerPage }}",
+            "Last Checking Date": "={{ new Date().toLocaleDateString('en-GB').replace(/\\//g, '-') }}",
+            "id": "={{ $('Loop Over Items2').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Career Page Link",
+              "displayName": "Career Page Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company Linkedin  URL",
+              "displayName": "Company Linkedin  URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job Career Page",
+              "displayName": "Save Job Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Save Job linkedin",
+              "displayName": "Save Job linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "New Unique Job ",
+              "displayName": "New Unique Job ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Last Checking Date",
+              "displayName": "Last Checking Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Checking Status Career Page",
+              "displayName": "Checking Status Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Checking Status Linkedin",
+              "displayName": "Checking Status Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1264,
+        1824
+      ],
+      "id": "57b2b0ed-560e-4ef9-9148-db4b67575081",
+      "name": "Create or update a record2",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/harvestapi~linkedin-job-search/run-sync-get-dataset-items?token=YOUR_APIFY_API_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"company\": [\n        \"{{ $json['Company Linkedin  URL'] }}\"\n    ],\n    \"easyApply\": false,\n    \"maxItems\": 10,\n    \"sortBy\": \"date\",\n    \"under10Applicants\": false\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.3,
+      "position": [
+        -272,
+        1424
+      ],
+      "id": "1643857c-7230-4373-9961-04859d51895a",
+      "name": "Scrape Linkedin",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "jsCode": "// All job items from the actor/HTTP node\nconst items = $input.all();\nconst jobs = items.map(i => i.json);\n\n// ✅ Pull the current loop item (the company row)\nconst loop = $item(0).$node[\"Loop Over Items2\"].json;\n\n// ✅ Use the exact key name from your sheet fields\nconst linkedInPageLink = loop[\"Company Linkedin  URL\"] || \"\";\nconst companyName = loop[\"Company Name\"] || \"\";\nconst rowNumber = loop[\"row_number\"] ?? null;\n\nlet text = '';\nlet i = 1;\n\nfor (const j of jobs) {\n  const title = (j.title || '').trim();\n  const url = (j.linkedinUrl || j.linkedInUrl || '').trim();\n\n  // location handling (sometimes object)\n  let location = '';\n  if (typeof j.location === 'string') location = j.location.trim();\n  else if (j.location?.linkedinText) location = String(j.location.linkedinText).trim();\n  else location = (j.headerCaptionText || '').split('·')[0].trim();\n\n  const publishedDate = (j.postedDate || '').split('T')[0];\n\n  if (!title || !url) continue;\n\n  text += `job_${i}\\n${title}\\n${url}\\n${location}\\n${publishedDate}\\n\\n`;\n  i++;\n}\n\nif (!text.trim()) text = 'No LinkedIn jobs found';\n\n// ✅ Return ONE item but KEEP ALL previous(loop) fields so next nodes can map them\nreturn [{\n  json: {\n    ...loop, // 🔥 keeps previous node fields available downstream\n    row_number: rowNumber,\n    \"Company Name\": companyName,\n    \"Linkedin Page Link\": linkedInPageLink,\n    NewJobLinkedin: text.trim(),\n    jobCount: i - 1,\n    source: \"linkedin\"\n  }\n}];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -96,
+        1488
+      ],
+      "id": "c4ec23f4-a48b-46e2-9413-7639f1ef8b93",
+      "name": "Parse Job Linkedin"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Save Job Career Page": "={{ $json.NewJobLinkedin }}",
+            "Last Checking Date": "={{ new Date().toLocaleDateString('en-GB').replace(/\\//g, '-') }}",
+            "id": "={{ $json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Career Page Link",
+              "displayName": "Career Page Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company Linkedin  URL",
+              "displayName": "Company Linkedin  URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job Career Page",
+              "displayName": "Save Job Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Save Job linkedin",
+              "displayName": "Save Job linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "New Unique Job ",
+              "displayName": "New Unique Job ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Last Checking Date",
+              "displayName": "Last Checking Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Checking Status Career Page",
+              "displayName": "Checking Status Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Checking Status Linkedin",
+              "displayName": "Checking Status Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        96,
+        1536
+      ],
+      "id": "364a1b3a-e89d-4544-a698-710902687fd5",
+      "name": "Create or update a record3",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"hasNewJobs\": \"Write here\",\n  \"newJobsText\": \"Write here\"\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        1520,
+        1248
+      ],
+      "id": "331d3d3a-0b24-4781-9507-bdf4c190e137",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Job Alert Deduplication Agent.\n\nYou will receive two inputs:\n\n1) Previously stored jobs ({{ $('Loop Over Items2').item.json['Save Job Career Page'] }})\n2) Newly scraped jobs ({{ $('Parse Jobs Career Page').item.json.NewJobCareerPage }})\n\nEach job is in the format:\n\njob_#\nJob Title\nJob URL\nLocation\n\nTASK:\n- Compare newly scraped jobs against previously stored jobs.\n- Identify ONLY jobs that are truly NEW.\n\nMATCHING RULES:\nA job is considered ALREADY EXISTING if:\n1) The normalized job URL matches exactly, OR\n2) The normalized job title AND normalized location both match.\n\nIf a job does not match the above, it is NEW.\n\nOUTPUT RULES (VERY IMPORTANT):\n- If at least one NEW job exists:\n  - hasNewJobs must be \"YES\"\n  - newJobsText must contain ONLY the NEW job blocks (original format).\n\n- If NO new jobs exist:\n  - hasNewJobs must be \"NO\"\n  - newJobsText must be an empty string.\n\nDo NOT include previous jobs.\nDo NOT include explanations.\nDo NOT include markdown.\n\nUse ONLY the output parser tool to produce the final answer.\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        1440,
+        1888
+      ],
+      "id": "c5a1c584-3bd8-4a46-9b05-8f58a7df89c8",
+      "name": "Career Page New Job Checker"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"hasNewJobs\": \"Write here\",\n  \"newJobsText\": \"Write here\"\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        352,
+        1088
+      ],
+      "id": "ea94ae0c-c70b-4247-bfad-393149a17ebb",
+      "name": "Structured Output Parser1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Job Alert Deduplication Agent.\n\nYou will receive two inputs:\n\n1) Previously stored LinkedIn jobs ({{ $('Parse Job Linkedin').item.json['Save Job linkedin'] }})\n2) Newly scraped LinkedIn jobs ({{ $('Parse Job Linkedin').item.json.NewJobLinkedin }})\n\nEach LinkedIn job block is in the following format:\n\njob_#\nJob Title\nJob URL\nLocation\nPublished Date (YYYY-MM-DD)\n\nExample:\n\njob_1\nSenior NPI Quality Engineer\nhttps://www.linkedin.com/jobs/view/4369117829/\nBoston, MA\n2026-02-05\n\njob_2\nProduct Marketing Manager - Hardware\nhttps://www.linkedin.com/jobs/view/4354761469/\nBoston, MA\n2026-02-03\n\nTASK:\n- Compare each newly scraped LinkedIn job against all previously stored LinkedIn jobs.\n- Identify ONLY jobs that are truly NEW.\n\nNORMALIZATION RULES:\n- Job URL:\n  - Remove trailing slash\n  - Remove query parameters\n  - Trim spaces\n\n- Job title and location:\n  - Convert to lowercase\n  - Trim spaces\n  - Collapse multiple spaces into one\n  - Remove symbols like | • – — ,\n\nMATCHING RULES:\nA LinkedIn job is considered ALREADY EXISTING if:\n1) The normalized job URL matches exactly, OR\n2) The normalized job title AND normalized location both match.\n\nPublished date should NOT be used for duplicate detection.\n\nIf a job does not match the above rules, it is NEW.\n\nOUTPUT RULES (VERY IMPORTANT):\n- If at least one NEW LinkedIn job exists:\n  - hasNewJobs must be \"YES\"\n  - newJobsText must contain ONLY the NEW LinkedIn job blocks in the original format (including published date).\n\n- If NO new LinkedIn jobs exist:\n  - hasNewJobs must be \"NO\"\n  - newJobsText must be an empty string.\n\nDo NOT include previous jobs.\nDo NOT include explanations.\nDo NOT include markdown.\n\nUse ONLY the output parser tool to produce the final answer.\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        288,
+        1584
+      ],
+      "id": "82e7ad26-7865-4726-aa34-7acc12c45364",
+      "name": "Linkedin New Job Checker"
+    },
+    {
+      "parameters": {
+        "model": "openai/gpt-3.5-turbo-0613",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        560,
+        2640
+      ],
+      "id": "43d89e4a-e829-4b55-8a14-2b2c28274555",
+      "name": "OpenRouter Chat Model4",
+      "credentials": {
+        "openRouterApi": {
+          "id": "jKgBnKlVYwxJ67tc",
+          "name": "OpenRouter account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3.2,
+      "position": [
+        1776,
+        1952
+      ],
+      "id": "7a47b861-43db-4501-8c63-05873b30142f",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Get all merged items\nconst items = $input.all().map(i => i.json);\n\n// Get Loop Over Items2 data (current row)\nconst loopData = $item(0).$node[\"Loop Over Items2\"].json;\n\nconst companyLinkedinURL =\n  loopData[\"Company Linkedin  URL\"] ||\n  loopData[\"Company Linkedin URL\"] ||\n  \"\";\n\nconst recordId = loopData[\"id\"] || \"\";\n\nreturn [\n  {\n    json: {\n      items,\n      \"Company Linkedin  URL\": companyLinkedinURL,\n      \"id\": recordId\n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1968,
+        2000
+      ],
+      "id": "12cd41d5-9d52-4ebe-9bfe-b615b17a636d",
+      "name": "Aggregate AI Input"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are a Job Alert Merge + Deduplication Agent.\n\nYou will receive TWO upstream results (Career Page checker and LinkedIn checker). \nEach upstream result contains:\n- hasNewJobs: \"YES\" or \"NO\"\n- newJobsText: plain text with job blocks\n\nINPUTS:\n\n1) Career Page checker output:\nhasNewJobs: {{ $json.items[0].output.hasNewJobs }}\nnewJobsText: {{ $json.items[0].output.newJobsText }}\n\n2) LinkedIn checker output:\nhasNewJobs: {{ $json.items[1].output.hasNewJobs }}\nnewJobsText: {{ $json.items[1].output.newJobsText }}\n\nJOB BLOCK FORMAT (MUST KEEP SAME FORMAT IN OUTPUT):\njob_#\nJob Title\nJob URL\nLocation\nPublished Date (YYYY-MM-DD)\n\nTASK:\n1) If BOTH newJobsText are empty (or both hasNewJobs are \"NO\"), then:\n   - hasNewJobs = \"NO\"\n   - newJobsText = \"\"\n\n2) Otherwise:\n   - Merge the job blocks from both sources into one list\n   - Remove duplicates across sources\n   - Output ONLY the final unique NEW job blocks\n\nNORMALIZATION RULES:\n- Normalize URL:\n  - trim spaces\n  - remove query parameters\n  - remove trailing slashes\n- Normalize title + location:\n  - lowercase\n  - trim spaces\n  - collapse multiple spaces into one\n  - remove symbols like | • – — , \n\nDUPLICATE RULES (cross-source):\nA job is duplicate if ANY of the following match another job:\n1) Normalized URL matches exactly\n2) Normalized title AND normalized location both match\n\nIMPORTANT:\n- Published Date must NOT be used for duplicate detection.\n- In the output, keep the original job block format exactly the same (including the published date line).\n- Renumber output blocks sequentially as job_1, job_2, job_3... in the final output.\n- Do not include any previous/old jobs—ONLY the final unique NEW jobs.\n\nOUTPUT RULES (STRICT):\n- If at least one unique NEW job exists after deduplication:\n  - hasNewJobs must be \"YES\"\n  - newJobsText must contain ONLY the final unique NEW job blocks (same format)\n\n- If no unique new jobs remain after deduplication:\n  - hasNewJobs must be \"NO\"\n  - newJobsText must be \"\"\n\nDo NOT include explanations.\nDo NOT include markdown.\nUse ONLY the output parser tool to produce the final answer.\n",
+        "hasOutputParser": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        2160,
+        2064
+      ],
+      "id": "e431cca4-ec15-4cdd-a650-f51a9d83773d",
+      "name": "Job Sentinel AI"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n  \"hasNewJobs\": \"Write here\",\n  \"newJobsText\": \"Write here\"\n}\n",
+        "autoFix": true
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.3,
+      "position": [
+        2208,
+        1360
+      ],
+      "id": "2f26733a-8bb9-4af1-be78-50bb02334b9a",
+      "name": "Structured Output Parser2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "34cf7b40-f708-492e-aff4-25bd0f9c5b7b",
+              "leftValue": "={{ $json.output.hasNewJobs }}",
+              "rightValue": "YES",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        2480,
+        2112
+      ],
+      "id": "d8958963-2e8d-47d7-a9bb-6b34d363dbc0",
+      "name": "If2"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        96,
+        -32
+      ],
+      "id": "87c23014-e053-4625-b304-a551624ab32f",
+      "name": "Job Store"
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Last Checking Date": "={{ new Date().toLocaleDateString('en-GB').replace(/\\//g, '-') }}",
+            "id": "={{ $('Aggregate AI Input').item.json.id }}",
+            "New Unique Job ": "={{ $('Job Sentinel AI').item.json.output.newJobsText }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Career Page Link",
+              "displayName": "Career Page Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company Linkedin  URL",
+              "displayName": "Company Linkedin  URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job Career Page",
+              "displayName": "Save Job Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job linkedin",
+              "displayName": "Save Job linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "New Unique Job ",
+              "displayName": "New Unique Job ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Checking Date",
+              "displayName": "Last Checking Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Checking Status Career Page",
+              "displayName": "Checking Status Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Checking Status Linkedin",
+              "displayName": "Checking Status Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2896,
+        2256
+      ],
+      "id": "9aa61dbb-2ce4-4047-9cce-0cd588e3ddcd",
+      "name": "Create or update a record4",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "upsert",
+        "base": {
+          "__rl": true,
+          "value": "appfWUx3rcVXZP9RL",
+          "mode": "list",
+          "cachedResultName": "Job Alert",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblBhX6tm6LCC4s4P",
+          "mode": "list",
+          "cachedResultName": "Table 1",
+          "cachedResultUrl": "https://airtable.com/appfWUx3rcVXZP9RL/tblBhX6tm6LCC4s4P"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Last Checking Date": "={{ new Date().toLocaleDateString('en-GB').replace(/\\//g, '-') }}",
+            "id": "={{ $('Aggregate AI Input').item.json.id }}",
+            "New Unique Job ": "=No new unique jobs (Last checked: {{ new Date().toLocaleDateString('en-GB').replace(/\\//g, '-') }} )"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Career Page Link",
+              "displayName": "Career Page Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Company Linkedin  URL",
+              "displayName": "Company Linkedin  URL",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job Career Page",
+              "displayName": "Save Job Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Save Job linkedin",
+              "displayName": "Save Job linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "New Unique Job ",
+              "displayName": "New Unique Job ",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Checking Date",
+              "displayName": "Last Checking Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Checking Status Career Page",
+              "displayName": "Checking Status Career Page",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Checking Status Linkedin",
+              "displayName": "Checking Status Linkedin",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        2688,
+        2208
+      ],
+      "id": "7cd731ce-d4fd-400d-b20f-0b884b257f96",
+      "name": "Create or update a record5",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "wUsfZLdOo0pYwgqt",
+          "name": "Shafiq"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## Final Job Alert\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 2032,
+        "width": 4480,
+        "color": 5
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -1024,
+        704
+      ],
+      "typeVersion": 1,
+      "id": "9572d028-bed5-4411-9748-5b529add80e3",
+      "name": "Sticky Note7"
+    },
+    {
+      "parameters": {
+        "content": "## Career Page & Linkedin Job Alert\n**Double click** to edit me. [Guide](https://docs.n8n.io/workflows/components/sticky-notes/)",
+        "height": 1680,
+        "width": 4192,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -896,
+        912
+      ],
+      "typeVersion": 1,
+      "id": "ddbc646a-acf6-4862-a662-0ee73fb10955",
+      "name": "Sticky Note6"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get Career Page Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Career Page Jobs": {
+      "main": [
+        [
+          {
+            "node": "Parse Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Jobs": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Search records1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get Linkedin Jobs",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Linkedin Jobs": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job Alert": {
+      "main": [
+        [
+          {
+            "node": "Search records2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records2": {
+      "main": [
+        [
+          {
+            "node": "Skip Today's Leads",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Skip Today's Leads": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Scrape Career Page",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Scrape Linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Career Page": {
+      "main": [
+        [
+          {
+            "node": "Parse Jobs Career Page",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Jobs Career Page": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Scrape Linkedin": {
+      "main": [
+        [
+          {
+            "node": "Parse Job Linkedin",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Job Linkedin": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Career Page New Job Checker",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record2": {
+      "main": [
+        [
+          {
+            "node": "Career Page New Job Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser1": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Linkedin New Job Checker",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record3": {
+      "main": [
+        [
+          {
+            "node": "Linkedin New Job Checker",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Linkedin New Job Checker",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Career Page New Job Checker",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Job Sentinel AI",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Structured Output Parser2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Career Page New Job Checker": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Linkedin New Job Checker": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate AI Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser2": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Job Sentinel AI",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate AI Input": {
+      "main": [
+        [
+          {
+            "node": "Job Sentinel AI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job Sentinel AI": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Job Store": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Create or update a record4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Create or update a record5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create or update a record5": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "3af1921b-a7b8-40d3-9897-65147005a7b4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "06006baeaecf6807c226385aa99285bacbd1bae88a421e70d621d54ebae32c7f"
+  },
+  "id": "B9HwG4d66NW540bb",
+  "tags": [
+    {
+      "updatedAt": "2026-02-24T18:26:56.771Z",
+      "createdAt": "2026-02-24T18:26:56.771Z",
+      "id": "UcZZqEAOOLDq2vDd",
+      "name": "Airtable"
+    },
+    {
+      "updatedAt": "2026-02-05T18:02:45.636Z",
+      "createdAt": "2026-02-05T18:02:45.636Z",
+      "id": "h1C3S2oYqe4RSedp",
+      "name": "Shafiq"
+    }
+  ]
+}

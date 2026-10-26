@@ -1,0 +1,37 @@
+# Md Shafiqur Rahman
+
+> AI automation expert and local SEO specialist from Brahmanbaria, Bangladesh. Builds AI agents and n8n workflow automations for businesses worldwide, and provides local SEO for woodworking businesses (cabinet makers, custom furniture makers, kitchen remodelers, carpenters and joiners) in the United States and the United Kingdom.
+
+## Services
+
+- [Local SEO for Woodworking Businesses](https://shafiqur.me/local-seo/): Google Business Profile creation and optimization (primary and secondary categories, service areas), on-page, technical and off-page SEO, local citations and review management. Plans: Starter $400/month, Growth $550/month, Authority $750/month (USD).
+- [AI Agents & Workflow Automation](https://shafiqur.me/ai-automation/): n8n workflows and AI agents for lead capture and qualification, CRM automation, email and WhatsApp follow-ups, chatbots, API integrations and reporting. Fixed quote after a free strategy call.
+
+## Work
+
+- [Projects](https://shafiqur.me/projects/): automation case studies with screenshots and n8n workflow files.
+- [GitHub](https://github.com/md-shafiqur-rahman): public n8n workflows.
+
+## Blog
+
+- [How to Build an n8n AI Agent for Lead Qualification](https://shafiqur.me/blog/n8n-ai-agent-lead-qualification/): Learn how to build an n8n AI agent that enriches, scores, routes, and follows up with sales leads automatically—without turning your CRM into a black box.
+- [How to Automate Lead Generation with AI in 2026 (Complete Guide)](https://shafiqur.me/blog/automate-lead-generation-ai/): Stop chasing leads manually. Learn how to build an AI-powered lead generation system using n8n, OpenAI, and CRM automation that captures, qualifies, and nurtures prospects on autopilot — 24/7.
+- [WhatsApp Business Automation with n8n: Complete Setup Guide for 2026](https://shafiqur.me/blog/whatsapp-automation-n8n-guide/): Automate WhatsApp messages, customer support, order notifications, and lead follow-ups using n8n. Save 15+ hours per week and never miss a customer message again.
+- [How Much Does Business Automation Cost in 2026? (Real Pricing Breakdown)](https://shafiqur.me/blog/business-automation-cost-2026/): Wondering what it costs to automate your business? Here's an honest, detailed pricing breakdown for n8n workflows, AI automation, chatbots, and CRM integrations — with real examples from client projects.
+- [n8n Expert in Bangladesh: Scale Your Business with Advanced Workflow Automation](https://shafiqur.me/blog/n8n-expert-in-bangladesh/): Looking for an n8n expert in Bangladesh? Discover how a professional n8n workflow specialist can help you automate complex business processes, reduce costs, and scale faster in 2026.
+- [AI Automation Expert in Bangladesh: How Shafiqur Rahman Is Transforming Local Businesses](https://shafiqur.me/blog/ai-automation-expert-in-bangladesh/): Looking for an AI automation expert in Bangladesh? Discover how Shafiqur Rahman helps Bangladeshi businesses eliminate manual work, cut costs, and scale smarter using n8n, AI agents, and intelligent workflow automation.
+- [What Does an AI Automation Specialist Do with n8n? (Complete 2026 Guide)](https://shafiqur.me/blog/ai-automation-specialist-n8n/): An AI automation specialist using n8n can transform how your business runs — eliminating repetitive tasks, connecting apps intelligently, and deploying AI agents that work 24/7. Here's exactly what that looks like.
+- [How to Automate 80% of Your Business Operations Using n8n](https://shafiqur.me/blog/automate-business-with-n8n/): Most businesses waste hundreds of hours on repetitive tasks every month. Here's how I helped a SaaS company automate lead capture, onboarding, invoicing, and reporting — all with one tool.
+- [RAG & AI Agents Explained: Build Smarter Automation with Context](https://shafiqur.me/blog/rag-ai-agents-explained/): What is Retrieval-Augmented Generation? How do AI agents actually work? A practical guide to building AI systems that understand your data.
+- [n8n vs Make vs Zapier: Which Automation Tool is Right for You?](https://shafiqur.me/blog/n8n-vs-make-vs-zapier/): A detailed comparison of the three biggest automation platforms. Pricing, features, flexibility, and when to use each one.
+- [Complete Guide to Webhook & API Integration for Non-Developers](https://shafiqur.me/blog/webhook-api-integration-guide/): Webhooks and APIs don't have to be scary. This step-by-step guide breaks down everything you need to connect any two apps.
+- [How to Calculate the ROI of Business Automation (With Real Numbers)](https://shafiqur.me/blog/automation-roi-calculator/): Is automation worth it? I break down the real costs, time savings, and revenue impact with actual examples from client projects.
+- [Automate Your CRM: HubSpot + n8n Workflow for Lead Management](https://shafiqur.me/blog/crm-automation-hubspot-n8n/): Learn how to build a fully automated CRM pipeline that captures leads, scores them, and triggers personalized follow-ups automatically.
+- [Building an AI Chatbot for Customer Support That Actually Works](https://shafiqur.me/blog/chatbot-customer-support/): Most chatbots are frustrating. Here's how to build one that understands context, retrieves accurate answers, and knows when to escalate.
+
+## Contact
+
+- Email: shafiqur.dev@gmail.com
+- WhatsApp: +8801600534507
+- LinkedIn: https://www.linkedin.com/in/automation-by-shafiq/
+- Book a free 30-minute strategy call: https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW

@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How to Automate 80% of Your Business Operations Using n8n — Md Shafiqur Rahman</title>
+    <meta name="description" content="Most businesses waste hundreds of hours on repetitive tasks every month. Here&#x27;s how I helped a SaaS company automate lead capture, onboarding, invoicing, and reporting — all with one tool.">
+    <meta name="author" content="Md Shafiqur Rahman">
+    <link rel="canonical" href="https://shafiqur.me/blog/automate-business-with-n8n/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Md Shafiqur Rahman">
+    <meta property="og:url" content="https://shafiqur.me/blog/automate-business-with-n8n/">
+    <meta property="og:title" content="How to Automate 80% of Your Business Operations Using n8n — Md Shafiqur Rahman">
+    <meta property="og:description" content="Most businesses waste hundreds of hours on repetitive tasks every month. Here&#x27;s how I helped a SaaS company automate lead capture, onboarding, invoicing, and reporting — all with one tool.">
+    <meta property="og:image" content="https://shafiqur.me/images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="../../images/shafiqur-avatar.png">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "How to Automate 80% of Your Business Operations Using n8n", "description": "Most businesses waste hundreds of hours on repetitive tasks every month. Here's how I helped a SaaS company automate lead capture, onboarding, invoicing, and reporting — all with one tool.", "datePublished": "2026-02-28", "author": {"@type": "Person", "@id": "https://shafiqur.me/#person", "name": "Md Shafiqur Rahman", "url": "https://shafiqur.me/"}, "mainEntityOfPage": "https://shafiqur.me/blog/automate-business-with-n8n/"}</script>
+
+    <script>
+        (function () {
+            var d = document.documentElement, t = null;
+            try { t = localStorage.getItem('theme'); } catch (e) {}
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            d.dataset.theme = t;
+            d.classList.add('js');
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="../../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../../css/shafiqur.css">
+</head>
+
+<body>
+
+    <header class="nav">
+        <a class="brand" href="../../" aria-label="Md Shafiqur Rahman — home">
+            <img src="../../images/shafiqur-avatar.png" alt="" width="36" height="36">
+            <span>shafiqur<span>.me</span></span>
+        </a>
+
+        <div class="side__profile">
+            <div class="side__photo">
+                <img src="../../images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg" alt="Portrait of Md Shafiqur Rahman" width="900" height="900">
+                <span class="status"><i></i>Available</span>
+            </div>
+            <strong>Md Shafiqur Rahman</strong>
+            <span>AI Automation &amp; Local SEO</span>
+        </div>
+
+        <nav class="nav__links" id="nav-links" aria-label="Primary">
+            <a href="../../">Home</a>
+            <a href="../../ai-automation/">AI Automation</a>
+            <a href="../../local-seo/">Local SEO</a>
+            <a href="../../projects/">Projects</a>
+            <a href="../../blog/" class="is-active" aria-current="page">Blog</a>
+            <a href="../../#contact">Contact</a>
+        </nav>
+
+        <div class="side__social">
+            <a class="social" href="https://www.linkedin.com/in/automation-by-shafiq/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a class="social" href="https://github.com/md-shafiqur-rahman" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a class="social" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a class="social" href="mailto:shafiqur.dev@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+
+        <div class="nav__actions">
+            <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch colour theme">
+                <i class="fa-solid fa-sun theme-icon--sun"></i>
+                <i class="fa-solid fa-moon theme-icon--moon"></i>
+            </button>
+            <a class="btn btn--primary btn--sm" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Let's Talk</a>
+            <button class="icon-btn nav__toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="page">
+        <article class="wrap wrap--narrow">
+            <a class="crumb" href="../"><i class="fa-solid fa-arrow-left"></i> All articles</a>
+            <header class="post-head">
+                <span class="tool-tag">Automation</span>
+                <h1>How to Automate 80% of Your Business Operations Using n8n</h1>
+                <p class="post-head__lead">Most businesses waste hundreds of hours on repetitive tasks every month. Here&#x27;s how I helped a SaaS company automate lead capture, onboarding, invoicing, and reporting — all with one tool.</p>
+                <p class="post-meta"><span>Md Shafiqur Rahman</span><span><time datetime="2026-02-28">Feb 28, 2026</time></span><span>8 min read</span></p>
+            </header>
+            <div class="prose">
+<h2>The Problem: Manual Work Is Killing Your Growth</h2>
+<p>Every hour your team spends on repetitive tasks is an hour not spent on strategy, client relationships, or revenue-generating activities. For most businesses, 40–60% of daily work could be automated — but it isn't.</p>
+<p>I recently worked with a SaaS company that had 3 full-time team members spending <strong>80% of their time</strong> on tasks like lead data entry, onboarding emails, invoice generation, and weekly reporting. Here's what we did.</p>
+<h2>The Solution: One Tool, Full Coverage</h2>
+<p>We chose <strong>n8n</strong> as the automation backbone. It's self-hosted, free at the core, and connects to virtually any API. Here are the 4 workflows we built:</p>
+<h3>1. Lead Capture &amp; CRM Sync</h3>
+<p>Every form submission automatically creates a contact in HubSpot, tags them by source, sends a personalized welcome email via Gmail, and alerts the sales team in Slack — in under 2 seconds.</p>
+<blockquote>
+<p>⚡ <strong>Result:</strong> 3 hours of daily data entry eliminated. Lead response time went from 4 hours to 2 minutes.</p>
+</blockquote>
+<h3>2. Automated Onboarding Sequence</h3>
+<p>When a new customer signs up, n8n triggers a 7-day onboarding email sequence, creates their account in the internal system, assigns them to a success manager, and creates a Notion page for their project — all automatically.</p>
+<h3>3. Invoice Generation &amp; Follow-up</h3>
+<p>At the end of each billing cycle, n8n pulls data from their database, generates a PDF invoice via an API, emails it to the client, and schedules 3 follow-up reminders if unpaid.</p>
+<h3>4. Weekly Reporting Dashboard</h3>
+<p>Every Monday at 8AM, n8n fetches data from Google Analytics, Stripe, and HubSpot, compiles it into a Google Sheet, and emails a summary report to leadership.</p>
+<h2>The Results</h2>
+<p>After 3 weeks of implementation and testing:</p>
+<ul>
+<li><strong>22 hours/week saved</strong> across the team</li>
+<li><strong>Lead response time cut by 94%</strong></li>
+<li><strong>Zero missed invoices</strong> since launch</li>
+<li>The equivalent of hiring a full-time operations person — for the cost of a VPS</li>
+</ul>
+<blockquote>
+<p>&quot;We went from drowning in admin work to having the team focused entirely on product and sales. The ROI was immediate.&quot;</p>
+</blockquote>
+<h2>How to Get Started</h2>
+<p>The best way to start is to audit your week. Write down every repetitive task you do. If it follows a consistent pattern and involves data moving between apps — it can almost certainly be automated.</p>
+<p>Start with one workflow. Get it running reliably. Then expand. That's the n8n way.</p>
+            </div>
+            <aside class="post-cta reveal">
+                    <h2>Want this built for your business?</h2>
+                    <p>Book a free 30-minute strategy call. I'll audit your current workflows and show you exactly where automation can save you time and money.</p>
+                    <div class="post-cta__row">
+                        <a class="btn btn--primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call <i class="fa-solid fa-arrow-right"></i></a>
+                        <a class="btn btn--ghost" href="../../#contact">Send a message</a>
+                    </div>
+                </aside>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <div class="wrap">
+            <p class="footer__line">More customers from Google. Less manual work behind the scenes.</p>
+            <div class="footer__row">
+                <span>© <span id="year">2026</span> Md Shafiqur Rahman · shafiqur.me · Brahmanbaria, Bangladesh</span>
+                <nav class="footer__links" aria-label="Footer">
+                    <a href="../../">Home</a>
+                    <a href="../../ai-automation/">AI Automation</a>
+                    <a href="../../local-seo/">Local SEO</a>
+                    <a href="../../projects/">Projects</a>
+                    <a href="../../blog/">Blog</a>
+                    <a href="../../#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating chat + back to top -->
+    <div class="dock">
+        <div class="chat" id="chat-panel" hidden>
+            <div class="chat__head">
+                <strong>Chat with Shafiqur</strong>
+                <span><i></i>Usually replies within a day</span>
+            </div>
+            <form class="chat__form" id="chat-form" method="POST" action="../../mailer.php">
+                <p>Have a quick question? Drop it here and I'll get back to you.</p>
+                <div class="field">
+                    <label for="chat-name">Your name</label>
+                    <input id="chat-name" name="name" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="chat-email">Email</label>
+                    <input id="chat-email" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="chat-message">Message</label>
+                    <textarea id="chat-message" name="message" required></textarea>
+                </div>
+                <input type="hidden" name="subject" value="Quick question (chat widget)">
+                <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button class="btn btn--primary" type="submit"><span class="btn-text">Send Message</span> <i class="fa-solid fa-paper-plane"></i></button>
+                <p class="form__note" id="chat-note" role="status" aria-live="polite"></p>
+                <a class="chat__alt" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> or message me on WhatsApp</a>
+            </form>
+        </div>
+        <button class="dock__btn dock__btn--top" id="to-top" type="button" aria-label="Back to top" hidden><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="dock__btn" id="chat-toggle" type="button" aria-label="Open chat" aria-expanded="false" aria-controls="chat-panel"><i class="fa-solid fa-comment-dots"></i></button>
+    </div>
+
+    <script src="../../js/shafiqur.js"></script>
+</body>
+
+</html>

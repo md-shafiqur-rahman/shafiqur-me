@@ -1,0 +1,166 @@
+{
+  "name": "WhatsApp Business Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": ["messages"],
+        "options": {}
+      },
+      "id": "whatsapp-trigger",
+      "name": "WhatsApp Trigger",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [240, 400],
+      "webhookId": "whatsapp-webhook-id"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "woocommerce-order",
+        "options": {}
+      },
+      "id": "woo-webhook",
+      "name": "WooCommerce — New Order",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [240, 220]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{$json.entry[0].changes[0].value.messages[0].type}}",
+              "operation": "equals",
+              "value2": "text"
+            }
+          ]
+        }
+      },
+      "id": "if-message-type",
+      "name": "IF — Is Text Message?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [480, 400]
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "={{$credentials.phoneNumberId}}",
+        "to": "={{$node['WooCommerce — New Order'].json.billing.phone}}",
+        "messageType": "text",
+        "message": "✅ Hi {{$json.billing.first_name}}! Your order #{{$json.id}} has been confirmed.\n\n🛒 Items: {{$json.line_items.map(i => i.name).join(', ')}}\n💵 Total: {{$json.currency_symbol}}{{$json.total}}\n📦 We'll notify you when it ships!\n\nThank you for shopping with us! 🙏"
+      },
+      "id": "send-order-confirmation",
+      "name": "WhatsApp — Order Confirmation",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [720, 220]
+    },
+    {
+      "parameters": {
+        "resource": "retrieve",
+        "operation": "retrieve",
+        "query": "={{$json.entry[0].changes[0].value.messages[0].text.body}}",
+        "additionalFields": {
+          "systemMessage": "You are a helpful customer support assistant for an e-commerce store. Answer questions about orders, shipping, returns, and products. Be friendly, concise, and helpful. If you don't know something specific about their order, ask for their order number."
+        }
+      },
+      "id": "openai-support",
+      "name": "OpenAI — Generate Support Reply",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.5,
+      "position": [720, 400]
+    },
+    {
+      "parameters": {
+        "phoneNumberId": "={{$credentials.phoneNumberId}}",
+        "to": "={{$node['WhatsApp Trigger'].json.entry[0].changes[0].value.messages[0].from}}",
+        "messageType": "text",
+        "message": "={{$json.message.content}}"
+      },
+      "id": "send-ai-reply",
+      "name": "WhatsApp — Send AI Reply",
+      "type": "n8n-nodes-base.whatsApp",
+      "typeVersion": 1,
+      "position": [960, 400]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "value": "your-google-sheet-id"
+        },
+        "sheetName": "Conversations",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "timestamp": "={{new Date().toISOString()}}",
+            "customer_phone": "={{$node['WhatsApp Trigger'].json.entry[0].changes[0].value.messages[0].from}}",
+            "message": "={{$node['WhatsApp Trigger'].json.entry[0].changes[0].value.messages[0].text.body}}",
+            "ai_response": "={{$node['OpenAI — Generate Support Reply'].json.message.content}}",
+            "status": "resolved"
+          }
+        }
+      },
+      "id": "log-sheets",
+      "name": "Google Sheets — Log Conversation",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [1200, 400]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "value": "your-google-sheet-id"
+        },
+        "sheetName": "Orders",
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "order_id": "={{$json.id}}",
+            "customer": "={{$json.billing.first_name + ' ' + $json.billing.last_name}}",
+            "phone": "={{$json.billing.phone}}",
+            "total": "={{$json.total}}",
+            "confirmation_sent": "=YES",
+            "timestamp": "={{new Date().toISOString()}}"
+          }
+        }
+      },
+      "id": "log-order",
+      "name": "Google Sheets — Log Order",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [960, 220]
+    }
+  ],
+  "connections": {
+    "WooCommerce — New Order": {
+      "main": [[{ "node": "WhatsApp — Order Confirmation", "type": "main", "index": 0 }, { "node": "Google Sheets — Log Order", "type": "main", "index": 0 }]]
+    },
+    "WhatsApp Trigger": {
+      "main": [[{ "node": "IF — Is Text Message?", "type": "main", "index": 0 }]]
+    },
+    "IF — Is Text Message?": {
+      "main": [
+        [{ "node": "OpenAI — Generate Support Reply", "type": "main", "index": 0 }],
+        []
+      ]
+    },
+    "OpenAI — Generate Support Reply": {
+      "main": [[{ "node": "WhatsApp — Send AI Reply", "type": "main", "index": 0 }]]
+    },
+    "WhatsApp — Send AI Reply": {
+      "main": [[{ "node": "Google Sheets — Log Conversation", "type": "main", "index": 0 }]]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "author": "Md Shafiqur Rahman — shafiqur.dev",
+    "description": "Complete WhatsApp Business automation: auto-sends order confirmations from WooCommerce, handles incoming customer messages with GPT-4o AI, and logs everything to Google Sheets.",
+    "n8nVersion": "1.x",
+    "note": "Replace 'your-google-sheet-id' with your actual Sheet ID. Add your WhatsApp Business API credentials and OpenAI API key in n8n credentials."
+  }
+}

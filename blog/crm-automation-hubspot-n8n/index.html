@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automate Your CRM: HubSpot + n8n Workflow for Lead Management — Md Shafiqur Rahman</title>
+    <meta name="description" content="Learn how to build a fully automated CRM pipeline that captures leads, scores them, and triggers personalized follow-ups automatically.">
+    <meta name="author" content="Md Shafiqur Rahman">
+    <link rel="canonical" href="https://shafiqur.me/blog/crm-automation-hubspot-n8n/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Md Shafiqur Rahman">
+    <meta property="og:url" content="https://shafiqur.me/blog/crm-automation-hubspot-n8n/">
+    <meta property="og:title" content="Automate Your CRM: HubSpot + n8n Workflow for Lead Management — Md Shafiqur Rahman">
+    <meta property="og:description" content="Learn how to build a fully automated CRM pipeline that captures leads, scores them, and triggers personalized follow-ups automatically.">
+    <meta property="og:image" content="https://shafiqur.me/images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="../../images/shafiqur-avatar.png">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Automate Your CRM: HubSpot + n8n Workflow for Lead Management", "description": "Learn how to build a fully automated CRM pipeline that captures leads, scores them, and triggers personalized follow-ups automatically.", "datePublished": "2026-02-05", "author": {"@type": "Person", "@id": "https://shafiqur.me/#person", "name": "Md Shafiqur Rahman", "url": "https://shafiqur.me/"}, "mainEntityOfPage": "https://shafiqur.me/blog/crm-automation-hubspot-n8n/"}</script>
+
+    <script>
+        (function () {
+            var d = document.documentElement, t = null;
+            try { t = localStorage.getItem('theme'); } catch (e) {}
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            d.dataset.theme = t;
+            d.classList.add('js');
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="../../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../../css/shafiqur.css">
+</head>
+
+<body>
+
+    <header class="nav">
+        <a class="brand" href="../../" aria-label="Md Shafiqur Rahman — home">
+            <img src="../../images/shafiqur-avatar.png" alt="" width="36" height="36">
+            <span>shafiqur<span>.me</span></span>
+        </a>
+
+        <div class="side__profile">
+            <div class="side__photo">
+                <img src="../../images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg" alt="Portrait of Md Shafiqur Rahman" width="900" height="900">
+                <span class="status"><i></i>Available</span>
+            </div>
+            <strong>Md Shafiqur Rahman</strong>
+            <span>AI Automation &amp; Local SEO</span>
+        </div>
+
+        <nav class="nav__links" id="nav-links" aria-label="Primary">
+            <a href="../../">Home</a>
+            <a href="../../ai-automation/">AI Automation</a>
+            <a href="../../local-seo/">Local SEO</a>
+            <a href="../../projects/">Projects</a>
+            <a href="../../blog/" class="is-active" aria-current="page">Blog</a>
+            <a href="../../#contact">Contact</a>
+        </nav>
+
+        <div class="side__social">
+            <a class="social" href="https://www.linkedin.com/in/automation-by-shafiq/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a class="social" href="https://github.com/md-shafiqur-rahman" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a class="social" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a class="social" href="mailto:shafiqur.dev@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+
+        <div class="nav__actions">
+            <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch colour theme">
+                <i class="fa-solid fa-sun theme-icon--sun"></i>
+                <i class="fa-solid fa-moon theme-icon--moon"></i>
+            </button>
+            <a class="btn btn--primary btn--sm" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Let's Talk</a>
+            <button class="icon-btn nav__toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="page">
+        <article class="wrap wrap--narrow">
+            <a class="crumb" href="../"><i class="fa-solid fa-arrow-left"></i> All articles</a>
+            <header class="post-head">
+                <span class="tool-tag">Automation</span>
+                <h1>Automate Your CRM: HubSpot + n8n Workflow for Lead Management</h1>
+                <p class="post-head__lead">Learn how to build a fully automated CRM pipeline that captures leads, scores them, and triggers personalized follow-ups automatically.</p>
+                <p class="post-meta"><span>Md Shafiqur Rahman</span><span><time datetime="2026-02-05">Feb 5, 2026</time></span><span>9 min read</span></p>
+            </header>
+            <div class="prose">
+<p>Your CRM is only as good as the data in it — and manually entering leads, updating stages, and sending follow-ups is a recipe for missed opportunities. Here's how to build a fully automated HubSpot pipeline using n8n.</p>
+<h2>What We're Building</h2>
+<p>A complete lead management workflow that:</p>
+<ul>
+<li>Captures leads from any source (forms, ads, cold outreach)</li>
+<li>Enriches the data automatically</li>
+<li>Scores the lead using AI</li>
+<li>Creates/updates the HubSpot contact</li>
+<li>Triggers the right email sequence based on score</li>
+<li>Notifies your sales team in Slack</li>
+</ul>
+<p>All without a single manual step.</p>
+<h2>Step 1: The Webhook Trigger</h2>
+<p>Every entry point to your system — Typeform, Webflow, Calendly, your website contact form — can send data to n8n via a webhook. In n8n, create a <strong>Webhook node</strong> and copy the URL into your form's notification settings.</p>
+<p>Now when anyone submits a form, n8n receives all their data instantly.</p>
+<h2>Step 2: Lead Enrichment</h2>
+<p>Before scoring, enrich the lead with additional data. With an <strong>HTTP Request node</strong>, you can hit Clearbit, Apollo, or Hunter.io to append:</p>
+<ul>
+<li>Company size</li>
+<li>Industry</li>
+<li>LinkedIn profile</li>
+<li>Email verification status</li>
+</ul>
+<p>This gives the AI more signal to work with.</p>
+<h2>Step 3: AI Lead Scoring</h2>
+<p>Pass the enriched data to an <strong>OpenAI node</strong> with a prompt like:</p>
+<blockquote>
+<p><em>&quot;Based on this lead's data, assign a score from 1-10 and a tier (Hot/Warm/Cold) based on their fit for a B2B AI automation service targeting companies with 10-200 employees. Respond in JSON.&quot;</em></p>
+</blockquote>
+<p>The AI returns a structured score you can use in the next steps.</p>
+<h2>Step 4: HubSpot Integration</h2>
+<p>Use n8n's <strong>HubSpot node</strong> to:</p>
+<ul>
+<li>Search for existing contact (avoid duplicates)</li>
+<li>Create a new contact or update the existing one</li>
+<li>Set the deal stage based on AI score</li>
+<li>Add tags, notes, and source data</li>
+</ul>
+<p>If the score is 8+, also create a Deal in HubSpot to trigger your sales pipeline.</p>
+<h2>Step 5: Email Sequences</h2>
+<p>Based on the lead tier:</p>
+<ul>
+<li><strong>Hot (8-10):</strong> Immediate personalized email + Calendly link + Slack alert to team</li>
+<li><strong>Warm (5-7):</strong> Enter drip campaign — 3 emails over 7 days</li>
+<li><strong>Cold (1-4):</strong> Add to nurture list, send monthly newsletter, revisit in 30 days</li>
+</ul>
+<p>Use <strong>Gmail</strong> or <strong>SendGrid</strong> nodes to send, and n8n's <strong>Execute Workflow</strong> node to schedule follow-ups.</p>
+<h2>Step 6: Slack Notification</h2>
+<p>For hot leads, send an instant Slack message to your sales channel:</p>
+<blockquote>
+<p>🔥 <strong>New Hot Lead!</strong>
+<strong>Name:</strong> Jane Smith | <strong>Score:</strong> 9/10
+<strong>Company:</strong> TechCorp (47 employees, SaaS)
+<strong>Source:</strong> Website contact form
+<strong>Action:</strong> [View in HubSpot] [Send email]</p>
+</blockquote>
+<p>Your team sees it within seconds. No lead goes cold from slow response.</p>
+<h2>The Results This Workflow Delivers</h2>
+<p>For clients who've implemented this system:</p>
+<ul>
+<li><strong>Response time:</strong> 4 hours → 90 seconds</li>
+<li><strong>Data accuracy:</strong> 40% → 98% (no typos, no missing fields)</li>
+<li><strong>Lead qualification rate:</strong> Up 60% (AI scoring removes false positives)</li>
+<li><strong>Team hours saved:</strong> 8-15 hours/week</li>
+</ul>
+<h2>What It Costs to Build</h2>
+<p>This workflow typically takes 6-8 hours to build and test properly. One-time build cost: $800–$1,200. Monthly API costs (Clearbit + OpenAI): $30–$80 depending on volume.</p>
+<p>Given that it replaces hours of daily manual work, payback is usually within 30 days.</p>
+<p>Ready to build this for your business? <a href="mailto:shafiqur.dev@gmail.com">Get in touch</a> and let's set up your automated CRM pipeline.</p>
+            </div>
+            <aside class="post-cta reveal">
+                    <h2>Want this built for your business?</h2>
+                    <p>Book a free 30-minute strategy call. I'll audit your current workflows and show you exactly where automation can save you time and money.</p>
+                    <div class="post-cta__row">
+                        <a class="btn btn--primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call <i class="fa-solid fa-arrow-right"></i></a>
+                        <a class="btn btn--ghost" href="../../#contact">Send a message</a>
+                    </div>
+                </aside>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <div class="wrap">
+            <p class="footer__line">More customers from Google. Less manual work behind the scenes.</p>
+            <div class="footer__row">
+                <span>© <span id="year">2026</span> Md Shafiqur Rahman · shafiqur.me · Brahmanbaria, Bangladesh</span>
+                <nav class="footer__links" aria-label="Footer">
+                    <a href="../../">Home</a>
+                    <a href="../../ai-automation/">AI Automation</a>
+                    <a href="../../local-seo/">Local SEO</a>
+                    <a href="../../projects/">Projects</a>
+                    <a href="../../blog/">Blog</a>
+                    <a href="../../#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating chat + back to top -->
+    <div class="dock">
+        <div class="chat" id="chat-panel" hidden>
+            <div class="chat__head">
+                <strong>Chat with Shafiqur</strong>
+                <span><i></i>Usually replies within a day</span>
+            </div>
+            <form class="chat__form" id="chat-form" method="POST" action="../../mailer.php">
+                <p>Have a quick question? Drop it here and I'll get back to you.</p>
+                <div class="field">
+                    <label for="chat-name">Your name</label>
+                    <input id="chat-name" name="name" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="chat-email">Email</label>
+                    <input id="chat-email" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="chat-message">Message</label>
+                    <textarea id="chat-message" name="message" required></textarea>
+                </div>
+                <input type="hidden" name="subject" value="Quick question (chat widget)">
+                <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button class="btn btn--primary" type="submit"><span class="btn-text">Send Message</span> <i class="fa-solid fa-paper-plane"></i></button>
+                <p class="form__note" id="chat-note" role="status" aria-live="polite"></p>
+                <a class="chat__alt" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> or message me on WhatsApp</a>
+            </form>
+        </div>
+        <button class="dock__btn dock__btn--top" id="to-top" type="button" aria-label="Back to top" hidden><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="dock__btn" id="chat-toggle" type="button" aria-label="Open chat" aria-expanded="false" aria-controls="chat-panel"><i class="fa-solid fa-comment-dots"></i></button>
+    </div>
+
+    <script src="../../js/shafiqur.js"></script>
+</body>
+
+</html>

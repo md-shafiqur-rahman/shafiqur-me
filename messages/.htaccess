@@ -1,0 +1,4 @@
+# Block direct access to saved messages and the password file; read messages through view.php
+<FilesMatch "\.(json)$|^config(\.example)?\.php$">
+    Require all denied
+</FilesMatch>

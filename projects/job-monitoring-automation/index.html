@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Job Monitoring &amp; AI-Powered Job Detection System — Md Shafiqur Rahman</title>
+    <meta name="description" content="Built a fully automated system that tracks job openings from company career pages and LinkedIn, detects new roles using AI, and updates a centralized database.">
+    <meta name="author" content="Md Shafiqur Rahman">
+    <link rel="canonical" href="https://shafiqur.me/projects/job-monitoring-automation/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Md Shafiqur Rahman">
+    <meta property="og:url" content="https://shafiqur.me/projects/job-monitoring-automation/">
+    <meta property="og:title" content="Automated Job Monitoring &amp; AI-Powered Job Detection System — Md Shafiqur Rahman">
+    <meta property="og:description" content="Built a fully automated system that tracks job openings from company career pages and LinkedIn, detects new roles using AI, and updates a centralized database.">
+    <meta property="og:image" content="https://shafiqur.me/projects/job-monitoring-automation/thumbnail.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="../../images/shafiqur-avatar.png">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Automated Job Monitoring & AI-Powered Job Detection System", "description": "Built a fully automated system that tracks job openings from company career pages and LinkedIn, detects new roles using AI, and updates a centralized database.", "datePublished": "2026-04-01", "author": {"@type": "Person", "@id": "https://shafiqur.me/#person", "name": "Md Shafiqur Rahman", "url": "https://shafiqur.me/"}, "mainEntityOfPage": "https://shafiqur.me/projects/job-monitoring-automation/"}</script>
+
+    <script>
+        (function () {
+            var d = document.documentElement, t = null;
+            try { t = localStorage.getItem('theme'); } catch (e) {}
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            d.dataset.theme = t;
+            d.classList.add('js');
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="../../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../../css/shafiqur.css">
+</head>
+
+<body>
+
+    <header class="nav">
+        <a class="brand" href="../../" aria-label="Md Shafiqur Rahman — home">
+            <img src="../../images/shafiqur-avatar.png" alt="" width="36" height="36">
+            <span>shafiqur<span>.me</span></span>
+        </a>
+
+        <div class="side__profile">
+            <div class="side__photo">
+                <img src="../../images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg" alt="Portrait of Md Shafiqur Rahman" width="900" height="900">
+                <span class="status"><i></i>Available</span>
+            </div>
+            <strong>Md Shafiqur Rahman</strong>
+            <span>AI Automation &amp; Local SEO</span>
+        </div>
+
+        <nav class="nav__links" id="nav-links" aria-label="Primary">
+            <a href="../../">Home</a>
+            <a href="../../ai-automation/">AI Automation</a>
+            <a href="../../local-seo/">Local SEO</a>
+            <a href="../../projects/" class="is-active" aria-current="page">Projects</a>
+            <a href="../../blog/">Blog</a>
+            <a href="../../#contact">Contact</a>
+        </nav>
+
+        <div class="side__social">
+            <a class="social" href="https://www.linkedin.com/in/automation-by-shafiq/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a class="social" href="https://github.com/md-shafiqur-rahman" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a class="social" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a class="social" href="mailto:shafiqur.dev@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+
+        <div class="nav__actions">
+            <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch colour theme">
+                <i class="fa-solid fa-sun theme-icon--sun"></i>
+                <i class="fa-solid fa-moon theme-icon--moon"></i>
+            </button>
+            <a class="btn btn--primary btn--sm" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Let's Talk</a>
+            <button class="icon-btn nav__toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="page">
+        <article class="wrap wrap--narrow">
+            <a class="crumb" href="../"><i class="fa-solid fa-arrow-left"></i> All projects</a>
+            <header class="post-head">
+                <span class="tool-tag">Automation</span>
+                <h1>Automated Job Monitoring &amp; AI-Powered Job Detection System</h1>
+                <p class="post-head__lead">Built a fully automated system that tracks job openings from company career pages and LinkedIn, detects new roles using AI, and updates a centralized database.</p>
+                <ul class="results"><li>Automated job tracking across multiple sources</li><li>AI-based new job detection</li><li>Zero manual monitoring</li></ul>
+                <div class="post-tools"><span>Tools used:</span><ul class="stack__list"><li>n8n</li><li>OpenAI</li><li>Firecrawl API</li><li>Apify API</li><li>Airtable</li></ul></div>
+            </header>
+            <div class="prose">
+<h2>What Was the Problem?</h2>
+<p>Manually checking company career pages and LinkedIn for new job openings is time-consuming and inefficient.</p>
+<p>For recruiters, job seekers, or businesses tracking competitors — this process becomes even harder when:</p>
+<ul>
+<li>Multiple company career pages need to be monitored</li>
+<li>Different ATS systems are used across websites</li>
+<li>LinkedIn job updates are inconsistent</li>
+<li>There is no easy way to track <strong>new vs existing jobs</strong></li>
+</ul>
+<p>They needed a system that could:</p>
+<ul>
+<li>Automatically <strong>scrape job listings</strong> from career pages and LinkedIn</li>
+<li>Store and organize job data centrally</li>
+<li>Detect <strong>new job openings intelligently</strong></li>
+<li>Allow <strong>flexible scheduling</strong> (daily, every 3 days, weekly, etc.)</li>
+<li>Eliminate manual checking completely</li>
+</ul>
+<hr />
+<h2>What I Built</h2>
+<p>Using <strong>n8n</strong>, I built a fully automated job monitoring system that continuously tracks job openings across multiple sources and intelligently detects new opportunities using AI.</p>
+<h3>Workflow Overview</h3>
+<ol>
+<li>
+<p><strong>Trigger System</strong></p>
+<ul>
+<li>A <strong>manual trigger</strong> is used to initially fetch and store job data when a new company is added</li>
+<li>A <strong>cron/schedule trigger</strong> runs the workflow automatically at custom intervals (3, 5, 7, 10, 15, or 30 days)</li>
+</ul>
+</li>
+<li>
+<p><strong>Job Source Input (Airtable)</strong></p>
+<ul>
+<li>Stores:
+<ul>
+<li>Company name</li>
+<li>Career page URL</li>
+<li>LinkedIn company URL</li>
+</ul>
+</li>
+<li>Acts as the central control panel for job tracking</li>
+</ul>
+</li>
+<li>
+<p><strong>Career Page Scraping (Firecrawl API)</strong></p>
+<ul>
+<li>Scrapes job listings from any career page</li>
+<li>Handles multiple ATS platforms (Greenhouse, Lever, custom sites, etc.)</li>
+<li>Ensures reliable extraction regardless of site structure</li>
+</ul>
+</li>
+<li>
+<p><strong>LinkedIn Job Scraping (Apify API)</strong></p>
+<ul>
+<li>Extracts job listings directly from LinkedIn company pages</li>
+<li>Complements career page data for complete coverage</li>
+</ul>
+</li>
+<li>
+<p><strong>Data Processing &amp; Structuring</strong></p>
+<ul>
+<li>Parses raw job data into structured format</li>
+<li>Standardizes job titles, links, and metadata</li>
+<li>Stores results in Airtable</li>
+</ul>
+</li>
+<li>
+<p><strong>AI-Powered Job Comparison (OpenAI)</strong></p>
+<ul>
+<li>Compares newly scraped jobs with previously stored jobs</li>
+<li>Detects whether a job is:
+<ul>
+<li>Existing (already stored)</li>
+<li>New (unique opportunity)</li>
+</ul>
+</li>
+<li>Eliminates duplicates intelligently</li>
+</ul>
+</li>
+<li>
+<p><strong>New Job Detection &amp; Update</strong></p>
+<ul>
+<li>If a new job is found:
+<ul>
+<li>It is marked as a <strong>“New Unique Job”</strong></li>
+<li>Airtable is updated automatically</li>
+</ul>
+</li>
+<li>Maintains a clean and up-to-date dataset</li>
+</ul>
+</li>
+<li>
+<p><strong>Tracking &amp; Status Logging</strong></p>
+<ul>
+<li>Stores:
+<ul>
+<li>Last checking date</li>
+<li>Career page check status</li>
+<li>LinkedIn check status</li>
+</ul>
+</li>
+<li>Ensures full transparency and monitoring</li>
+</ul>
+</li>
+</ol>
+<hr />
+<h2>Key Technical Details</h2>
+<ul>
+<li>Built using <strong>n8n modular workflow architecture</strong></li>
+<li>Implemented <strong>looping logic</strong> to process multiple companies dynamically</li>
+<li>Used <strong>AI Agent (OpenAI)</strong> to compare job datasets and detect uniqueness</li>
+<li>Designed flexible scheduling using <strong>cron triggers</strong></li>
+<li>Structured Airtable as a lightweight <strong>CRM/database layer</strong></li>
+<li>Ensured compatibility with <strong>multiple ATS systems</strong> via Firecrawl</li>
+<li>Combined multiple data sources (Career Page + LinkedIn) into one unified pipeline</li>
+</ul>
+<hr />
+<h2>Results</h2>
+<blockquote>
+<p>🚀 <strong>100% automated job monitoring system</strong> — no manual checking needed<br />
+🧠 <strong>AI-powered job detection</strong> — accurately identifies new opportunities<br />
+⏱️ <strong>Flexible scheduling</strong> — runs every 3, 5, 7, 10, 15, or 30 days<br />
+📊 <strong>Centralized job database</strong> — all data stored and organized in Airtable<br />
+🔄 <strong>Real-time updates</strong> — instantly detects and logs new job openings</p>
+</blockquote>
+<hr />
+<h2>Tools Used</h2>
+<ul>
+<li><strong>n8n</strong> — Workflow automation &amp; orchestration</li>
+<li><strong>OpenAI API</strong> — AI-based job comparison &amp; detection</li>
+<li><strong>Firecrawl API</strong> — Career page scraping (multi-ATS support)</li>
+<li><strong>Apify API</strong> — LinkedIn job scraping</li>
+<li><strong>Airtable API</strong> — Data storage and management</li>
+</ul>
+            </div>
+            <section class="shots">
+                <h2>Workflow</h2>
+                <div class="shots__grid">
+                    <a href="workflow-ss-1.png" target="_blank" rel="noopener"><img src="workflow-ss-1.png" alt="Workflow screenshot 1" loading="lazy"></a>
+                    <a href="workflow-ss-2.png" target="_blank" rel="noopener"><img src="workflow-ss-2.png" alt="Workflow screenshot 2" loading="lazy"></a>
+                </div>
+            </section>
+            <section class="shots">
+                <h2>Output</h2>
+                <div class="shots__grid">
+                    <a href="system-output-ss-1.png" target="_blank" rel="noopener"><img src="system-output-ss-1.png" alt="Output screenshot 1" loading="lazy"></a>
+                    <a href="system-output-ss-2.png" target="_blank" rel="noopener"><img src="system-output-ss-2.png" alt="Output screenshot 2" loading="lazy"></a>
+                </div>
+            </section>
+            <p class="post-download"><a class="btn btn--ghost" href="workflow.json" download="job-monitoring-automation-workflow.json"><i class="fa-solid fa-download"></i> Download the n8n workflow (JSON)</a></p>
+                <aside class="post-cta reveal">
+                    <h2>Want Something Like This for Your Business?</h2>
+                    <p>Let's map out your automation. Book a free 30-minute strategy call — I'll audit your current workflows and show you exactly where automation can save you time and money.</p>
+                    <div class="post-cta__row">
+                        <a class="btn btn--primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call <i class="fa-solid fa-arrow-right"></i></a>
+                        <a class="btn btn--ghost" href="../../#contact">Send a message</a>
+                    </div>
+                </aside>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <div class="wrap">
+            <p class="footer__line">More customers from Google. Less manual work behind the scenes.</p>
+            <div class="footer__row">
+                <span>© <span id="year">2026</span> Md Shafiqur Rahman · shafiqur.me · Brahmanbaria, Bangladesh</span>
+                <nav class="footer__links" aria-label="Footer">
+                    <a href="../../">Home</a>
+                    <a href="../../ai-automation/">AI Automation</a>
+                    <a href="../../local-seo/">Local SEO</a>
+                    <a href="../../projects/">Projects</a>
+                    <a href="../../blog/">Blog</a>
+                    <a href="../../#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating chat + back to top -->
+    <div class="dock">
+        <div class="chat" id="chat-panel" hidden>
+            <div class="chat__head">
+                <strong>Chat with Shafiqur</strong>
+                <span><i></i>Usually replies within a day</span>
+            </div>
+            <form class="chat__form" id="chat-form" method="POST" action="../../mailer.php">
+                <p>Have a quick question? Drop it here and I'll get back to you.</p>
+                <div class="field">
+                    <label for="chat-name">Your name</label>
+                    <input id="chat-name" name="name" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="chat-email">Email</label>
+                    <input id="chat-email" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="chat-message">Message</label>
+                    <textarea id="chat-message" name="message" required></textarea>
+                </div>
+                <input type="hidden" name="subject" value="Quick question (chat widget)">
+                <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button class="btn btn--primary" type="submit"><span class="btn-text">Send Message</span> <i class="fa-solid fa-paper-plane"></i></button>
+                <p class="form__note" id="chat-note" role="status" aria-live="polite"></p>
+                <a class="chat__alt" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> or message me on WhatsApp</a>
+            </form>
+        </div>
+        <button class="dock__btn dock__btn--top" id="to-top" type="button" aria-label="Back to top" hidden><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="dock__btn" id="chat-toggle" type="button" aria-label="Open chat" aria-expanded="false" aria-controls="chat-panel"><i class="fa-solid fa-comment-dots"></i></button>
+    </div>
+
+    <script src="../../js/shafiqur.js"></script>
+</body>
+
+</html>

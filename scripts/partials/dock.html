@@ -1,0 +1,31 @@
+    <!-- Floating chat + back to top -->
+    <div class="dock">
+        <div class="chat" id="chat-panel" hidden>
+            <div class="chat__head">
+                <strong>Chat with Shafiqur</strong>
+                <span><i></i>Usually replies within a day</span>
+            </div>
+            <form class="chat__form" id="chat-form" method="POST" action="mailer.php">
+                <p>Have a quick question? Drop it here and I'll get back to you.</p>
+                <div class="field">
+                    <label for="chat-name">Your name</label>
+                    <input id="chat-name" name="name" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="chat-email">Email</label>
+                    <input id="chat-email" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="chat-message">Message</label>
+                    <textarea id="chat-message" name="message" required></textarea>
+                </div>
+                <input type="hidden" name="subject" value="Quick question (chat widget)">
+                <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button class="btn btn--primary" type="submit"><span class="btn-text">Send Message</span> <i class="fa-solid fa-paper-plane"></i></button>
+                <p class="form__note" id="chat-note" role="status" aria-live="polite"></p>
+                <a class="chat__alt" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> or message me on WhatsApp</a>
+            </form>
+        </div>
+        <button class="dock__btn dock__btn--top" id="to-top" type="button" aria-label="Back to top" hidden><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="dock__btn" id="chat-toggle" type="button" aria-label="Open chat" aria-expanded="false" aria-controls="chat-panel"><i class="fa-solid fa-comment-dots"></i></button>
+    </div>

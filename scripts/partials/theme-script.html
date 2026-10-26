@@ -1,0 +1,9 @@
+    <script>
+        (function () {
+            var d = document.documentElement, t = null;
+            try { t = localStorage.getItem('theme'); } catch (e) {}
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            d.dataset.theme = t;
+            d.classList.add('js');
+        })();
+    </script>

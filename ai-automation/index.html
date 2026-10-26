@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Agents &amp; Automation Services (n8n) — Md Shafiqur Rahman</title>
+    <meta name="description" content="AI agents and n8n workflow automation for businesses: lead capture, CRM automation, chatbots, API integrations and reporting. Built by Md Shafiqur Rahman.">
+    <meta name="author" content="Md Shafiqur Rahman">
+    <link rel="canonical" href="https://shafiqur.me/ai-automation/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Md Shafiqur Rahman">
+    <meta property="og:url" content="https://shafiqur.me/ai-automation/">
+    <meta property="og:title" content="AI Agents &amp; Automation Services (n8n) — Md Shafiqur Rahman">
+    <meta property="og:description" content="AI agents and n8n workflow automation for businesses: lead capture, CRM automation, chatbots, API integrations and reporting. Built by Md Shafiqur Rahman.">
+    <meta property="og:image" content="https://shafiqur.me/images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="../images/shafiqur-avatar.png">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Service", "name": "AI Agents & Workflow Automation", "serviceType": "Workflow automation and AI agent development", "provider": {"@type": "Person", "@id": "https://shafiqur.me/#person", "name": "Md Shafiqur Rahman", "url": "https://shafiqur.me/"}, "url": "https://shafiqur.me/ai-automation/", "areaServed": "Worldwide", "description": "n8n workflows and AI agents for lead capture, CRM automation, follow-ups, chatbots, API integrations and reporting."}</script>
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": [{"@type": "Question", "name": "What is AI automation?", "acceptedAnswer": {"@type": "Answer", "text": "AI automation connects the apps your business already uses and adds AI steps where a person used to make a decision. For example, a workflow can capture a new lead, use AI to check if it is a good fit, add it to your CRM and send a personal follow-up, all without anyone touching it."}}, {"@type": "Question", "name": "What can you automate with n8n?", "acceptedAnswer": {"@type": "Answer", "text": "Most repetitive work that moves data between apps, for example:Lead capture, scoring and CRM updatesEmail and WhatsApp follow-upsSupport ticket routing and AI chatbotsWeekly reports pulled from several toolsSyncing data between forms, spreadsheets, databases and payment tools"}}, {"@type": "Question", "name": "Do you use n8n, Make or Zapier?", "acceptedAnswer": {"@type": "Answer", "text": "Mostly n8n, because it handles complex multi-step workflows and can be self-hosted. I also work in Make and Zapier when a business already uses them. I compare the three in n8n vs Make vs Zapier."}}, {"@type": "Question", "name": "How long does it take to build a workflow?", "acceptedAnswer": {"@type": "Answer", "text": "A simple workflow can be live in a few days. Larger systems with AI agents and several connected apps take longer. You get a clear timeline after the free strategy call, before any work starts."}}, {"@type": "Question", "name": "How much does automation cost?", "acceptedAnswer": {"@type": "Answer", "text": "It depends on how many apps and steps are involved, so I give a fixed quote after the free strategy call. My article How much does business automation cost? explains what drives the price."}}, {"@type": "Question", "name": "Can I see workflows you have built?", "acceptedAnswer": {"@type": "Answer", "text": "Yes. My n8n workflows are public on GitHub, and the projects page has screenshots and downloadable workflow files."}}]}</script>
+
+    <script>
+        (function () {
+            var d = document.documentElement, t = null;
+            try { t = localStorage.getItem('theme'); } catch (e) {}
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            d.dataset.theme = t;
+            d.classList.add('js');
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../css/shafiqur.css">
+</head>
+
+<body>
+
+    <header class="nav">
+        <a class="brand" href="../" aria-label="Md Shafiqur Rahman — home">
+            <img src="../images/shafiqur-avatar.png" alt="" width="36" height="36">
+            <span>shafiqur<span>.me</span></span>
+        </a>
+
+        <div class="side__profile">
+            <div class="side__photo">
+                <img src="../images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg" alt="Portrait of Md Shafiqur Rahman" width="900" height="900">
+                <span class="status"><i></i>Available</span>
+            </div>
+            <strong>Md Shafiqur Rahman</strong>
+            <span>AI Automation &amp; Local SEO</span>
+        </div>
+
+        <nav class="nav__links" id="nav-links" aria-label="Primary">
+            <a href="../">Home</a>
+            <a href="../ai-automation/" class="is-active" aria-current="page">AI Automation</a>
+            <a href="../local-seo/">Local SEO</a>
+            <a href="../projects/">Projects</a>
+            <a href="../blog/">Blog</a>
+            <a href="../#contact">Contact</a>
+        </nav>
+
+        <div class="side__social">
+            <a class="social" href="https://www.linkedin.com/in/automation-by-shafiq/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a class="social" href="https://github.com/md-shafiqur-rahman" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a class="social" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a class="social" href="mailto:shafiqur.dev@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+
+        <div class="nav__actions">
+            <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch colour theme">
+                <i class="fa-solid fa-sun theme-icon--sun"></i>
+                <i class="fa-solid fa-moon theme-icon--moon"></i>
+            </button>
+            <a class="btn btn--primary btn--sm" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Let's Talk</a>
+            <button class="icon-btn nav__toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero hero--page" id="top">
+            <div class="wrap hero__inner">
+                <div class="hero__text">
+                    <span class="eyebrow">AI Agents &amp; Automation</span>
+                    <h1>AI Agents &amp; Workflow <em class="hl">Automation</em></h1>
+                    <p class="hero__lead">Manual processes slow growth. I build n8n workflows and AI agents that capture leads, answer customers and handle repetitive work, so your team can focus on the work that grows the business.</p>
+                    <div class="hero__cta">
+                        <a class="btn btn--primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call <i class="fa-solid fa-arrow-right"></i></a>
+                        <a class="btn btn--ghost" href="#work">See my workflows</a>
+                    </div>
+                </div>
+
+                <a class="flow hero__flow" href="https://github.com/md-shafiqur-rahman/linkedin-leadlens-n8n-workflow" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn LeadLens workflow on GitHub">
+                    <span class="flow__label">// workflow: linkedin-leadlens</span>
+                    <div class="flow__track">
+                        <div class="node" style="--i:0"><i class="fa-solid fa-link"></i><div><strong>Form trigger</strong><span>LinkedIn post URL</span></div></div>
+                        <div class="flow__link"></div>
+                        <div class="node" style="--i:1"><i class="fa-solid fa-spider"></i><div><strong>Apify scraper</strong><span>collect commenters</span></div></div>
+                        <div class="flow__link"></div>
+                        <div class="node" style="--i:2"><i class="fa-solid fa-brain"></i><div><strong>Structure &amp; score</strong><span>flag decision-makers</span></div></div>
+                        <div class="flow__link"></div>
+                        <div class="node" style="--i:3"><i class="fa-solid fa-filter"></i><div><strong>Country filter</strong><span>keep target countries</span></div></div>
+                        <div class="flow__link"></div>
+                        <div class="node" style="--i:4"><i class="fa-solid fa-table"></i><div><strong>Google Sheets</strong><span>save qualified leads</span></div></div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="section" id="services">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">What I Do</span>
+                    <h2>Automation Services That <em class="hl">Scale Your Business</em></h2>
+                </div>
+                <ol class="services reveal">
+                    <li class="service">
+                        <span class="service__no">01</span>
+                        <h3>AI Workflow Automation</h3>
+                        <p>End-to-end automation using n8n, Make, and Zapier. From lead capture to follow-up sequences — fully hands-free.</p>
+                        <span class="service__icon"><i class="fa-solid fa-diagram-project"></i></span>
+                    </li>
+                    <li class="service">
+                        <span class="service__no">02</span>
+                        <h3>AI Agent Development</h3>
+                        <p>Custom AI agents powered by RAG, LLMs, and vector databases. They understand context, retrieve knowledge, and take action.</p>
+                        <span class="service__icon"><i class="fa-solid fa-brain"></i></span>
+                    </li>
+                    <li class="service">
+                        <span class="service__no">03</span>
+                        <h3>API &amp; Data Integration</h3>
+                        <p>Seamlessly connect your CRM, databases, payment systems, and third-party APIs into one unified data pipeline.</p>
+                        <span class="service__icon"><i class="fa-solid fa-link"></i></span>
+                    </li>
+                    <li class="service">
+                        <span class="service__no">04</span>
+                        <h3>Business Process Automation</h3>
+                        <p>Automate repetitive tasks — invoicing, reporting, data entry, email follow-ups — so your team focuses on growth.</p>
+                        <span class="service__icon"><i class="fa-solid fa-gears"></i></span>
+                    </li>
+                    <li class="service">
+                        <span class="service__no">05</span>
+                        <h3>Chatbot &amp; Conversational AI</h3>
+                        <p>Build intelligent chatbots that handle customer queries, qualify leads, and integrate with your existing systems 24/7.</p>
+                        <span class="service__icon"><i class="fa-solid fa-comments"></i></span>
+                    </li>
+                    <li class="service">
+                        <span class="service__no">06</span>
+                        <h3>Automation Consulting</h3>
+                        <p>Not sure where to start? I'll audit your workflows, find bottlenecks, and design a custom automation roadmap.</p>
+                        <span class="service__icon"><i class="fa-solid fa-compass"></i></span>
+                    </li>
+                    <li class="service">
+                        <span class="service__no">07</span>
+                        <h3>Lead Gen &amp; Email Automation</h3>
+                        <p>Automated lead capture, nurturing sequences, cold outreach, and follow-up pipelines — turning prospects into paying clients on autopilot.</p>
+                        <span class="service__icon"><i class="fa-solid fa-bullseye"></i></span>
+                    </li>
+                </ol>
+            </div>
+        </section>
+
+        <section class="section" id="stack">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">Tech Stack</span>
+                    <h2>Tools &amp; Technologies <em class="hl">I Work With</em></h2>
+                    <p>Every tool is chosen for a reason. Here's the stack I use to build automation systems that are fast, reliable, and scalable.</p>
+                </div>
+                <div class="stack reveal">
+                    <div class="stack__row">
+                        <span class="stack__label">Automation</span>
+                        <ul class="stack__list">
+                            <li>n8n</li>
+                            <li>Make (Integromat)</li>
+                            <li>Zapier</li>
+                        </ul>
+                    </div>
+                    <div class="stack__row">
+                        <span class="stack__label">Code</span>
+                        <ul class="stack__list">
+                            <li>Python</li>
+                            <li>REST APIs</li>
+                            <li>Webhooks</li>
+                        </ul>
+                    </div>
+                    <div class="stack__row">
+                        <span class="stack__label">AI</span>
+                        <ul class="stack__list">
+                            <li>OpenAI</li>
+                            <li>Gemini</li>
+                            <li>Claude</li>
+                            <li>RAG</li>
+                            <li>Vector databases</li>
+                        </ul>
+                    </div>
+                    <div class="stack__row">
+                        <span class="stack__label">Data &amp; CRM</span>
+                        <ul class="stack__list">
+                            <li>Airtable</li>
+                            <li>Supabase</li>
+                            <li>PostgreSQL</li>
+                            <li>HubSpot</li>
+                            <li>GoHighLevel</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="process">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">My Process</span>
+                    <h2>How I Build Your <em class="hl">Automation System</em></h2>
+                </div>
+                <div class="process">
+                    <div class="step reveal">
+                        <div class="step__no">01</div>
+                        <h3>Discovery &amp; Audit</h3>
+                        <p>We start with a deep-dive into your current workflows. I identify bottlenecks, repetitive tasks, and opportunities where automation can save you the most time and money.</p>
+                    </div>
+                    <div class="step reveal">
+                        <div class="step__no">02</div>
+                        <h3>Strategy &amp; Architecture</h3>
+                        <p>I design a custom automation blueprint tailored to your business. Every workflow is mapped out before a single node is placed — no guesswork, just precision.</p>
+                    </div>
+                    <div class="step reveal">
+                        <div class="step__no">03</div>
+                        <h3>Build &amp; Integrate</h3>
+                        <p>I build the automation system, connect all your tools, set up error handling, and ensure everything runs smoothly in production. Tested. Reliable. Bulletproof.</p>
+                    </div>
+                    <div class="step reveal">
+                        <div class="step__no">04</div>
+                        <h3>Launch &amp; Optimize</h3>
+                        <p>Once live, I monitor performance, optimize for speed, and iterate based on real data. Automation isn't set-and-forget — it's set-and-improve.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="work">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">Work Showcase</span>
+                    <h2>See My Automations <em class="hl">in Action</em></h2>
+                    <p>Workflows I've built with n8n. The code is public on GitHub, so you can open each one and see how it works.</p>
+                </div>
+                <div class="work">
+                    <article class="card card--wide reveal">
+                        <div class="work__canvas" aria-hidden="true">
+                            <span class="pill">LinkedIn post URL</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">Apify comment scraper</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">Structure profile data</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill pill--hot">Score lead priority</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">Country filter</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">Google Sheets</span>
+                        </div>
+                        <div class="work__body">
+                            <span class="tool-tag">n8n Workflow</span>
+                            <h3>LinkedIn LeadLens</h3>
+                            <p>Turns the people commenting on a LinkedIn post into structured, country-filtered and prioritized leads. Founders, owners, CEOs and directors are marked as primary leads, and qualified records are saved to Google Sheets.</p>
+                            <div class="work__links">
+                                <a href="https://github.com/md-shafiqur-rahman/linkedin-leadlens-n8n-workflow" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> View on GitHub</a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <div class="work__canvas" aria-hidden="true">
+                            <span class="pill">Book details</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill pill--hot">n8n webhook</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">Chapters + images</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">Manuscript</span>
+                        </div>
+                        <div class="work__body">
+                            <span class="tool-tag">n8n + Web Console</span>
+                            <h3>Book Generator</h3>
+                            <p>A manuscript console for an n8n workflow. Set the title, topic, audience, tone, chapter count and language, and the workflow generates the book in the background.</p>
+                            <div class="work__links">
+                                <a href="https://github.com/md-shafiqur-rahman/n8n-book-generator" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> View on GitHub</a>
+                                <a href="https://n8n-book-generator.vercel.app" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right"></i> Live console</a>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="card reveal">
+                        <div class="work__canvas" aria-hidden="true">
+                            <span class="pill">Topic</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill pill--hot">n8n webhook</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">Write + illustrate</span><i class="fa-solid fa-arrow-right"></i>
+                            <span class="pill">PDF</span>
+                        </div>
+                        <div class="work__body">
+                            <span class="tool-tag">n8n + Dashboard</span>
+                            <h3>Bindery</h3>
+                            <p>Give it a topic and an n8n workflow writes, illustrates and binds an illustrated book as a PDF, with a library of finished books.</p>
+                            <div class="work__links">
+                                <a href="https://github.com/md-shafiqur-rahman/YouTube-to-lllustrated-PDF-V2-Dashboard" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> View on GitHub</a>
+                                <a href="https://you-tube-to-lllustrated-pdf-v2-dash.vercel.app" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-arrow-up-right"></i> Live dashboard</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="work__more reveal">
+                    <a class="btn btn--primary" href="../projects/">All project case studies <i class="fa-solid fa-arrow-right"></i></a>
+                    <a class="btn btn--ghost" href="https://github.com/md-shafiqur-rahman" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github"></i> See all my work on GitHub</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section" id="faq">
+            <div class="wrap">
+                <div class="section-head reveal">
+                    <span class="eyebrow">FAQ</span>
+                    <h2>AI Automation <em class="hl">Questions</em></h2>
+                </div>
+                <div class="faq reveal">
+                    <details open>
+                        <summary><h3>What is AI automation?</h3></summary>
+                        <div class="faq__a"><p>AI automation connects the apps your business already uses and adds AI steps where a person used to make a decision. For example, a workflow can capture a new lead, use AI to check if it is a good fit, add it to your CRM and send a personal follow-up, all without anyone touching it.</p></div>
+                    </details>
+                    <details>
+                        <summary><h3>What can you automate with n8n?</h3></summary>
+                        <div class="faq__a"><p>Most repetitive work that moves data between apps, for example:</p><ul><li>Lead capture, scoring and CRM updates</li><li>Email and WhatsApp follow-ups</li><li>Support ticket routing and AI chatbots</li><li>Weekly reports pulled from several tools</li><li>Syncing data between forms, spreadsheets, databases and payment tools</li></ul></div>
+                    </details>
+                    <details>
+                        <summary><h3>Do you use n8n, Make or Zapier?</h3></summary>
+                        <div class="faq__a"><p>Mostly n8n, because it handles complex multi-step workflows and can be self-hosted. I also work in Make and Zapier when a business already uses them. I compare the three in <a href="../blog/n8n-vs-make-vs-zapier/">n8n vs Make vs Zapier</a>.</p></div>
+                    </details>
+                    <details>
+                        <summary><h3>How long does it take to build a workflow?</h3></summary>
+                        <div class="faq__a"><p>A simple workflow can be live in a few days. Larger systems with AI agents and several connected apps take longer. You get a clear timeline after the free strategy call, before any work starts.</p></div>
+                    </details>
+                    <details>
+                        <summary><h3>How much does automation cost?</h3></summary>
+                        <div class="faq__a"><p>It depends on how many apps and steps are involved, so I give a fixed quote after the free strategy call. My article <a href="../blog/business-automation-cost-2026/">How much does business automation cost?</a> explains what drives the price.</p></div>
+                    </details>
+                    <details>
+                        <summary><h3>Can I see workflows you have built?</h3></summary>
+                        <div class="faq__a"><p>Yes. My n8n workflows are public on <a href="https://github.com/md-shafiqur-rahman" target="_blank" rel="noopener noreferrer">GitHub</a>, and the <a href="../projects/">projects page</a> has screenshots and downloadable workflow files.</p></div>
+                    </details>
+                </div>
+                <aside class="post-cta reveal">
+                    <h2>Want this built for your business?</h2>
+                    <p>Book a free 30-minute strategy call. I'll audit your current workflows and show you exactly where automation can save you time and money.</p>
+                    <div class="post-cta__row">
+                        <a class="btn btn--primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call <i class="fa-solid fa-arrow-right"></i></a>
+                        <a class="btn btn--ghost" href="../#contact">Send a message</a>
+                    </div>
+                </aside>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="wrap">
+            <p class="footer__line">More customers from Google. Less manual work behind the scenes.</p>
+            <div class="footer__row">
+                <span>© <span id="year">2026</span> Md Shafiqur Rahman · shafiqur.me · Brahmanbaria, Bangladesh</span>
+                <nav class="footer__links" aria-label="Footer">
+                    <a href="../">Home</a>
+                    <a href="../ai-automation/">AI Automation</a>
+                    <a href="../local-seo/">Local SEO</a>
+                    <a href="../projects/">Projects</a>
+                    <a href="../blog/">Blog</a>
+                    <a href="../#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating chat + back to top -->
+    <div class="dock">
+        <div class="chat" id="chat-panel" hidden>
+            <div class="chat__head">
+                <strong>Chat with Shafiqur</strong>
+                <span><i></i>Usually replies within a day</span>
+            </div>
+            <form class="chat__form" id="chat-form" method="POST" action="../mailer.php">
+                <p>Have a quick question? Drop it here and I'll get back to you.</p>
+                <div class="field">
+                    <label for="chat-name">Your name</label>
+                    <input id="chat-name" name="name" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="chat-email">Email</label>
+                    <input id="chat-email" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="chat-message">Message</label>
+                    <textarea id="chat-message" name="message" required></textarea>
+                </div>
+                <input type="hidden" name="subject" value="Quick question (chat widget)">
+                <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button class="btn btn--primary" type="submit"><span class="btn-text">Send Message</span> <i class="fa-solid fa-paper-plane"></i></button>
+                <p class="form__note" id="chat-note" role="status" aria-live="polite"></p>
+                <a class="chat__alt" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> or message me on WhatsApp</a>
+            </form>
+        </div>
+        <button class="dock__btn dock__btn--top" id="to-top" type="button" aria-label="Back to top" hidden><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="dock__btn" id="chat-toggle" type="button" aria-label="Open chat" aria-expanded="false" aria-controls="chat-panel"><i class="fa-solid fa-comment-dots"></i></button>
+    </div>
+
+    <script src="../js/shafiqur.js"></script>
+</body>
+
+</html>

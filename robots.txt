@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /messages/
+
+Sitemap: https://shafiqur.me/sitemap.xml

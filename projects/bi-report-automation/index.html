@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Automated Weekly Business Intelligence Report — Md Shafiqur Rahman</title>
+    <meta name="description" content="Built a Monday morning report automation that pulls KPIs from Stripe, Google Analytics, and HubSpot — then uses AI to write an executive summary. Zero human effort required.">
+    <meta name="author" content="Md Shafiqur Rahman">
+    <link rel="canonical" href="https://shafiqur.me/projects/bi-report-automation/">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="Md Shafiqur Rahman">
+    <meta property="og:url" content="https://shafiqur.me/projects/bi-report-automation/">
+    <meta property="og:title" content="Automated Weekly Business Intelligence Report — Md Shafiqur Rahman">
+    <meta property="og:description" content="Built a Monday morning report automation that pulls KPIs from Stripe, Google Analytics, and HubSpot — then uses AI to write an executive summary. Zero human effort required.">
+    <meta property="og:image" content="https://shafiqur.me/images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <link rel="icon" type="image/png" href="../../images/shafiqur-avatar.png">
+    <script type="application/ld+json">{"@context": "https://schema.org", "@type": "Article", "headline": "Automated Weekly Business Intelligence Report", "description": "Built a Monday morning report automation that pulls KPIs from Stripe, Google Analytics, and HubSpot — then uses AI to write an executive summary. Zero human effort required.", "datePublished": "2026-02-28", "author": {"@type": "Person", "@id": "https://shafiqur.me/#person", "name": "Md Shafiqur Rahman", "url": "https://shafiqur.me/"}, "mainEntityOfPage": "https://shafiqur.me/projects/bi-report-automation/"}</script>
+
+    <script>
+        (function () {
+            var d = document.documentElement, t = null;
+            try { t = localStorage.getItem('theme'); } catch (e) {}
+            if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+            d.dataset.theme = t;
+            d.classList.add('js');
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap">
+    <link rel="stylesheet" href="../../css/fontawesome.min.css">
+    <link rel="stylesheet" href="../../css/shafiqur.css">
+</head>
+
+<body>
+
+    <header class="nav">
+        <a class="brand" href="../../" aria-label="Md Shafiqur Rahman — home">
+            <img src="../../images/shafiqur-avatar.png" alt="" width="36" height="36">
+            <span>shafiqur<span>.me</span></span>
+        </a>
+
+        <div class="side__profile">
+            <div class="side__photo">
+                <img src="../../images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg" alt="Portrait of Md Shafiqur Rahman" width="900" height="900">
+                <span class="status"><i></i>Available</span>
+            </div>
+            <strong>Md Shafiqur Rahman</strong>
+            <span>AI Automation &amp; Local SEO</span>
+        </div>
+
+        <nav class="nav__links" id="nav-links" aria-label="Primary">
+            <a href="../../">Home</a>
+            <a href="../../ai-automation/">AI Automation</a>
+            <a href="../../local-seo/">Local SEO</a>
+            <a href="../../projects/" class="is-active" aria-current="page">Projects</a>
+            <a href="../../blog/">Blog</a>
+            <a href="../../#contact">Contact</a>
+        </nav>
+
+        <div class="side__social">
+            <a class="social" href="https://www.linkedin.com/in/automation-by-shafiq/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+            <a class="social" href="https://github.com/md-shafiqur-rahman" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+            <a class="social" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+            <a class="social" href="mailto:shafiqur.dev@gmail.com" aria-label="Email"><i class="fa-solid fa-envelope"></i></a>
+        </div>
+
+        <div class="nav__actions">
+            <button class="icon-btn" id="theme-toggle" type="button" aria-label="Switch colour theme">
+                <i class="fa-solid fa-sun theme-icon--sun"></i>
+                <i class="fa-solid fa-moon theme-icon--moon"></i>
+            </button>
+            <a class="btn btn--primary btn--sm" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Let's Talk</a>
+            <button class="icon-btn nav__toggle" id="nav-toggle" type="button" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="page">
+        <article class="wrap wrap--narrow">
+            <a class="crumb" href="../"><i class="fa-solid fa-arrow-left"></i> All projects</a>
+            <header class="post-head">
+                <span class="tool-tag">Reporting</span>
+                <h1>Automated Weekly Business Intelligence Report</h1>
+                <p class="post-head__lead">Built a Monday morning report automation that pulls KPIs from Stripe, Google Analytics, and HubSpot — then uses AI to write an executive summary. Zero human effort required.</p>
+                <ul class="results"><li>Saves 4 hrs every Monday</li><li>Executive team gets reports automatically at 8AM</li></ul>
+                <div class="post-tools"><span>Tools used:</span><ul class="stack__list"><li>n8n</li><li>Stripe API</li><li>Google Analytics</li><li>HubSpot</li><li>GPT-4o</li><li>Gmail</li><li>Google Slides</li></ul></div>
+            </header>
+            <div class="prose">
+<h2>The Problem</h2>
+<p>A SaaS startup's leadership team spent <strong>4 hours every Monday morning</strong> manually pulling numbers from Stripe, Google Analytics, and HubSpot — copying them into a Google Slides deck and writing a summary. It was the same repetitive work, every single week.</p>
+<h2>The Automation</h2>
+<p>I built an <strong>n8n workflow</strong> that runs automatically every Monday at 8:00 AM and delivers a complete business intelligence report to the entire leadership team.</p>
+<h3>What Gets Pulled Automatically</h3>
+<ul>
+<li><strong>Stripe</strong> — Weekly revenue, new subscriptions, churn, MRR</li>
+<li><strong>Google Analytics</strong> — Sessions, new users, top pages, conversion rate</li>
+<li><strong>HubSpot</strong> — New leads, deals closed, pipeline value, sales activity</li>
+</ul>
+<h3>What AI Does With the Data</h3>
+<p>All data is sent to <strong>GPT-4o</strong> with a structured prompt that:</p>
+<ol>
+<li>Identifies the biggest wins and concerns of the week</li>
+<li>Compares current week vs previous week (% change)</li>
+<li>Writes an executive-level summary in plain English — no jargon</li>
+</ol>
+<h3>How It's Delivered</h3>
+<p>The final report is:</p>
+<ul>
+<li>Formatted into a <strong>Google Slides template</strong> automatically</li>
+<li>Emailed to the leadership team via <strong>Gmail</strong> with a direct link</li>
+<li>Also posted in a <strong>Slack channel</strong> with the AI summary</li>
+</ul>
+<h2>Results</h2>
+<blockquote>
+<p>⏱️ <strong>Time saved:</strong> <strong>4 hours every Monday</strong> — that's 16+ hours/month<br />
+📊 <strong>Consistency:</strong> Reports are always ready by 8AM, without fail<br />
+🤖 <strong>AI summaries:</strong> Leadership team rated the AI summaries as &quot;better than what we wrote manually&quot;<br />
+📉 <strong>Human error:</strong> Eliminated — no more copy-paste mistakes in KPI slides</p>
+</blockquote>
+<h2>Tools Used</h2>
+<ul>
+<li><strong>n8n</strong> — Workflow automation and scheduling</li>
+<li><strong>Stripe API</strong> — Revenue and subscription data</li>
+<li><strong>Google Analytics API</strong> — Traffic and conversion data</li>
+<li><strong>HubSpot API</strong> — Sales pipeline data</li>
+<li><strong>GPT-4o</strong> — Executive summary generation</li>
+<li><strong>Google Slides API</strong> — Report generation</li>
+<li><strong>Gmail</strong> — Report delivery</li>
+<li><strong>Slack</strong> — Team notification</li>
+</ul>
+            </div>
+                <aside class="post-cta reveal">
+                    <h2>Want Something Like This for Your Business?</h2>
+                    <p>Let's map out your automation. Book a free 30-minute strategy call — I'll audit your current workflows and show you exactly where automation can save you time and money.</p>
+                    <div class="post-cta__row">
+                        <a class="btn btn--primary" href="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qi01q3a8nFRs1mBdFyXAYmmyJpmdOz-0SwVETYPGadUrcfdO-td5khej7lSC7F4Y2rwXZH6QW" target="_blank" rel="noopener noreferrer">Book a Free Strategy Call <i class="fa-solid fa-arrow-right"></i></a>
+                        <a class="btn btn--ghost" href="../../#contact">Send a message</a>
+                    </div>
+                </aside>
+        </article>
+    </main>
+
+    <footer class="footer">
+        <div class="wrap">
+            <p class="footer__line">More customers from Google. Less manual work behind the scenes.</p>
+            <div class="footer__row">
+                <span>© <span id="year">2026</span> Md Shafiqur Rahman · shafiqur.me · Brahmanbaria, Bangladesh</span>
+                <nav class="footer__links" aria-label="Footer">
+                    <a href="../../">Home</a>
+                    <a href="../../ai-automation/">AI Automation</a>
+                    <a href="../../local-seo/">Local SEO</a>
+                    <a href="../../projects/">Projects</a>
+                    <a href="../../blog/">Blog</a>
+                    <a href="../../#contact">Contact</a>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Floating chat + back to top -->
+    <div class="dock">
+        <div class="chat" id="chat-panel" hidden>
+            <div class="chat__head">
+                <strong>Chat with Shafiqur</strong>
+                <span><i></i>Usually replies within a day</span>
+            </div>
+            <form class="chat__form" id="chat-form" method="POST" action="../../mailer.php">
+                <p>Have a quick question? Drop it here and I'll get back to you.</p>
+                <div class="field">
+                    <label for="chat-name">Your name</label>
+                    <input id="chat-name" name="name" type="text" autocomplete="name" required>
+                </div>
+                <div class="field">
+                    <label for="chat-email">Email</label>
+                    <input id="chat-email" name="email" type="email" autocomplete="email" required>
+                </div>
+                <div class="field">
+                    <label for="chat-message">Message</label>
+                    <textarea id="chat-message" name="message" required></textarea>
+                </div>
+                <input type="hidden" name="subject" value="Quick question (chat widget)">
+                <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <button class="btn btn--primary" type="submit"><span class="btn-text">Send Message</span> <i class="fa-solid fa-paper-plane"></i></button>
+                <p class="form__note" id="chat-note" role="status" aria-live="polite"></p>
+                <a class="chat__alt" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> or message me on WhatsApp</a>
+            </form>
+        </div>
+        <button class="dock__btn dock__btn--top" id="to-top" type="button" aria-label="Back to top" hidden><i class="fa-solid fa-arrow-up"></i></button>
+        <button class="dock__btn" id="chat-toggle" type="button" aria-label="Open chat" aria-expanded="false" aria-controls="chat-panel"><i class="fa-solid fa-comment-dots"></i></button>
+    </div>
+
+    <script src="../../js/shafiqur.js"></script>
+</body>
+
+</html>

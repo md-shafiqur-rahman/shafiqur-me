@@ -2,7 +2,7 @@
 
 Portfolio site of Md Shafiqur Rahman: AI agents & automation, and local SEO for woodworking businesses.
 
-Plain static HTML, CSS and JavaScript. The contact and chat forms post to `mailer.php`, so the site needs PHP hosting.
+Plain static HTML, CSS and JavaScript. Hosted on Vercel. The contact and chat forms send messages to email through Web3Forms.
 
 ## Pages
 
@@ -26,4 +26,4 @@ The build regenerates every page, `sitemap.xml` and `llms.txt`.
 
 ## Deploying
 
-Upload everything except `content/`, `scripts/` and `README.md`. Then on the server, create `messages/config.php` from `messages/config.example.php` with the inbox password. The inbox is at `/messages/view.php`.
+Vercel publishes the repo as a static site. Commit the rebuilt pages and push; Vercel deploys automatically.

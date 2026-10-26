@@ -190,7 +190,9 @@
                 <strong>Chat with Shafiqur</strong>
                 <span><i></i>Usually replies within a day</span>
             </div>
-            <form class="chat__form" id="chat-form" method="POST" action="../../mailer.php">
+            <form class="chat__form" id="chat-form" method="POST" action="https://api.web3forms.com/submit">
+                <input type="hidden" name="access_key" value="0694f8fa-bb6d-47c5-a4b6-305680a8cf99">
+                <input type="hidden" name="from_name" value="shafiqur.me chat box">
                 <p>Have a quick question? Drop it here and I'll get back to you.</p>
                 <div class="field">
                     <label for="chat-name">Your name</label>
@@ -205,7 +207,7 @@
                     <textarea id="chat-message" name="message" required></textarea>
                 </div>
                 <input type="hidden" name="subject" value="Quick question (chat widget)">
-                <input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+                <input class="hp" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
                 <button class="btn btn--primary" type="submit"><span class="btn-text">Send Message</span> <i class="fa-solid fa-paper-plane"></i></button>
                 <p class="form__note" id="chat-note" role="status" aria-live="polite"></p>
                 <a class="chat__alt" href="https://wa.me/8801600534507" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-whatsapp"></i> or message me on WhatsApp</a>

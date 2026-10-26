@@ -1,6 +1,2 @@
-# Contact form submissions and the inbox password stay on the server only
-messages/messages.json
-messages/config.php
-
 .DS_Store
 __pycache__/

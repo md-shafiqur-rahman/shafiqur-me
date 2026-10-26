@@ -123,7 +123,7 @@
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
-            if (form.elements.website.value) return; // honeypot
+            if (form.elements.botcheck.checked) return; // honeypot
 
             var btn = form.querySelector('button[type="submit"]');
             var label = btn.querySelector('.btn-text');
@@ -131,12 +131,12 @@
             btn.disabled = true;
             label.textContent = 'Sending…';
 
-            fetch(form.action, { method: 'POST', body: new FormData(form) })
+            fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } })
                 .then(function (res) {
                     return res.json().then(function (data) { return { ok: res.ok, data: data }; });
                 })
                 .then(function (r) {
-                    if (r.ok && r.data && r.data.status === 'success') {
+                    if (r.ok && r.data && r.data.success) {
                         form.reset();
                         say('Message sent. I will get back to you soon.', true);
                     } else {

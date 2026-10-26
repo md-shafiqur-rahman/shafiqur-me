@@ -169,7 +169,7 @@ def page(rel_dir, title, desc, body, active, og_type='website', schema=(), image
 </html>
 ''' % dict(title=esc(title), desc=esc(desc), url=url, og=og_type, p=p, theme=THEME_JS,
            image=image or SITE + '/' + PHOTO, schema=''.join(ld(s) for s in schema),
-           header=header(p, active), footer=footer(p), dock=DOCK.replace('action="mailer.php"', 'action="%smailer.php"' % p),
+           header=header(p, active), footer=footer(p), dock=DOCK,
            body=body, main_cls=' class="%s"' % main_cls if main_cls else '')
     d = os.path.join(OUT, rel_dir)
     os.makedirs(d, exist_ok=True)
@@ -696,7 +696,7 @@ urls.append((page('projects', 'Projects — AI Automation Case Studies | Md Shaf
 sm = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
 sm += ''.join('  <url><loc>%s</loc>%s</url>\n' % (u, '<lastmod>%s</lastmod>' % d if d else '') for u, d in urls)
 open(os.path.join(OUT, 'sitemap.xml'), 'w').write(sm + '</urlset>\n')
-open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\nDisallow: /messages/\n\nSitemap: %s/sitemap.xml\n' % SITE)
+open(os.path.join(OUT, 'robots.txt'), 'w').write('User-agent: *\nAllow: /\n\nSitemap: %s/sitemap.xml\n' % SITE)
 
 llms = '''# Md Shafiqur Rahman
 

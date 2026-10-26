@@ -1,13 +1,11 @@
 ---
-title: Complete Guide to Webhook & API Integration for Non-Developers
 published: true
-seo:
-  metaDescription: Webhooks and APIs don't have to be scary. This step-by-step guide breaks down everything you need to connect any two apps.
-settings:
-  category: tutorial
-  date: '2026-02-15'
-  readTime: 7 min read
-  featured: false
+date: '2026-02-15'
+metaDescription: Webhooks and APIs don't have to be scary. This step-by-step guide breaks down everything you need to connect any two apps.
+category: tutorial
+readTime: 7 min read
+featured: false
+title: Complete Guide to Webhook & API Integration for Non-Developers
 ---
 
 If you've ever wanted to connect two apps that don't natively talk to each other, you've encountered webhooks and APIs. They sound technical, but the concepts are surprisingly simple once you see them through the right lens.

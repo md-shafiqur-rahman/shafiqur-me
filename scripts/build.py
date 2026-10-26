@@ -558,21 +558,35 @@ def post_faq(items):
     return '            <section class="post-faq">\n                <h2>Frequently asked questions</h2>\n' + faq_block(items).replace(' reveal', '') + '            </section>\n'
 
 
+def local_day(value):
+    """The editor saves dates as UTC timestamps; show the day as it was in Bangladesh."""
+    text = str(value or '')
+    if 'T' not in text:
+        return text[:10]
+    try:
+        from zoneinfo import ZoneInfo
+        moment = datetime.datetime.fromisoformat(text.replace('Z', '+00:00'))
+        return moment.astimezone(ZoneInfo('Asia/Dhaka')).date().isoformat()
+    except Exception:
+        return text[:10]
+
+
 def post_fields(d):
-    """Flatten the editor's SEO / social / settings groups; older posts keep flat fields."""
+    """Normalise an article's front matter. The editor saves flat fields; older formats are still accepted."""
     seo, social, st = d.get('seo') or {}, d.get('social') or {}, d.get('settings') or {}
-    d['excerpt'] = seo.get('metaDescription') or d.get('excerpt') or ''
-    d['seoTitle'] = seo.get('metaTitle') or d.get('seoTitle') or ''
-    d['focusKeyword'] = seo.get('focusKeyword') or ''
-    for k, default in (('date', ''), ('category', 'automation'), ('readTime', '5 min read'), ('featured', False)):
-        d[k] = st.get(k) if st.get(k) not in (None, '') else d.get(k, default)
-    d['date'] = str(d['date'])[:10]
-    d['image'] = st.get('image') or ''
-    d['imageAlt'] = st.get('imageAlt') or d['title']
-    d['tags'] = [t for t in (st.get('tags') or []) if t]
-    d['ogTitle'] = social.get('title') or ''
-    d['ogDesc'] = social.get('description') or ''
-    d['ogImage'] = social.get('image') or ''
+    pick = lambda *vals, default='': next((v for v in vals if v not in (None, '')), default)
+    d['excerpt'] = pick(d.get('metaDescription'), seo.get('metaDescription'), d.get('excerpt'))
+    d['seoTitle'] = pick(d.get('metaTitle'), seo.get('metaTitle'), d.get('seoTitle'))
+    d['date'] = local_day(pick(d.get('date'), st.get('date')))
+    d['category'] = pick(d.get('category'), st.get('category'), default='automation')
+    d['readTime'] = pick(d.get('readTime'), st.get('readTime'), default='5 min read')
+    d['featured'] = bool(pick(d.get('featured'), st.get('featured'), default=False))
+    d['image'] = pick(d.get('image'), st.get('image'))
+    d['imageAlt'] = pick(d.get('imageAlt'), st.get('imageAlt'), d['title'])
+    d['tags'] = [t for t in (d.get('tags') or st.get('tags') or []) if t]
+    d['ogTitle'] = pick(d.get('ogTitle'), social.get('title'))
+    d['ogDesc'] = pick(d.get('ogDescription'), social.get('description'))
+    d['ogImage'] = pick(d.get('ogImage'), social.get('image'))
     return d
 
 

@@ -1,13 +1,11 @@
 ---
-title: 'Automate Your CRM: HubSpot + n8n Workflow for Lead Management'
 published: true
-seo:
-  metaDescription: Learn how to build a fully automated CRM pipeline that captures leads, scores them, and triggers personalized follow-ups automatically.
-settings:
-  category: automation
-  date: '2026-02-05'
-  readTime: 9 min read
-  featured: false
+date: '2026-02-05'
+metaDescription: Learn how to build a fully automated CRM pipeline that captures leads, scores them, and triggers personalized follow-ups automatically.
+category: automation
+readTime: 9 min read
+featured: false
+title: 'Automate Your CRM: HubSpot + n8n Workflow for Lead Management'
 ---
 
 Your CRM is only as good as the data in it — and manually entering leads, updating stages, and sending follow-ups is a recipe for missed opportunities. Here's how to build a fully automated HubSpot pipeline using n8n.

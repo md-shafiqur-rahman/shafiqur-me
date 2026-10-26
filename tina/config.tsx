@@ -3,6 +3,10 @@ import { defineConfig, wrapFieldsWithMeta } from "tinacms";
 
 // Blog editor for shafiqur.me. Articles are saved as Markdown in content/blog/,
 // then scripts/build.py turns them into pages.
+//
+// Layout: the article (title, content, FAQ) on the left and a WordPress / Rank Math
+// style sidebar on the right. The sidebar fields come first in the schema so they
+// can float to the right of the article; the CSS is in SIDEBAR_CSS below.
 
 const SITE = "https://shafiqur.me";
 
@@ -14,7 +18,49 @@ const slugify = (text: string) =>
     .replace(/\s+/g, "-")
     .replace(/-+/g, "-");
 
-// ── Rank Math style SEO panel: Google preview + checklist ──────────────────
+// The form's field list is the flex-wrap div that holds the title input.
+const LIST = 'div.flex-wrap:has(> div input[name="title"])';
+const MAIN = [
+  ':has(input[name="title"])',
+  ':has(input[name="filename"])',
+  ":has([data-slate-editor])",
+  ':has([data-test="list-faq"])',
+  '[data-test="list-faq"]',
+]
+  .map((s) => `${LIST} > div${s}`)
+  .join(",\n");
+
+const SIDEBAR_CSS = `
+@media (min-width: 1000px) {
+  ${LIST} { display: flow-root !important; }
+  ${LIST} > div {
+    float: right; clear: right; width: 340px; margin: 0 0 0 0 !important;
+    padding: 10px 16px 6px !important; background: #fff;
+    border-left: 1px solid #e5e7eb; border-right: 1px solid #e5e7eb;
+  }
+  ${LIST} > div:has(.sidebar-head) { margin-top: 18px !important; border-top: 1px solid #e5e7eb; border-radius: 10px 10px 0 0; padding-top: 0 !important; }
+  ${LIST} > div:has(.sidebar-head):first-child { margin-top: 0 !important; }
+  ${LIST} > div:has(+ div .sidebar-head), ${LIST} > div:has(+ div input[name="title"]) { border-bottom: 1px solid #e5e7eb; border-radius: 0 0 10px 10px; padding-bottom: 14px !important; }
+  ${MAIN} {
+    float: none; clear: none; width: auto; margin: 0 364px 22px 0 !important;
+    padding: 0 !important; background: none; border: 0; border-radius: 0;
+  }
+}
+.sidebar-head { margin: 0 -16px 4px; padding: 11px 16px; border-bottom: 1px solid #e5e7eb; font-weight: 600; font-size: 14px; color: #111827; display: flex; align-items: center; gap: 8px; }
+.sidebar-head span { color: #ec4815; }
+`;
+
+const SidebarHead = (label: string, icon: string, withCss = false) =>
+  function Head() {
+    return (
+      <div>
+        {withCss && <style>{SIDEBAR_CSS}</style>}
+        <div className="sidebar-head"><span>{icon}</span>{label}</div>
+      </div>
+    );
+  };
+
+// ── Rank Math style SEO analysis: score, Google preview and checklist ──────
 
 type Node = { type?: string; text?: string; children?: Node[] };
 
@@ -46,10 +92,10 @@ const SeoAnalysis = wrapFieldsWithMeta((props: any) => {
   const fileSlug = path.split("/").pop()?.replace(/\.mdx?$/, "") || "";
   const slug = values.filename || fileSlug || slugify(values.title);
 
-  const keyword = (values.seo?.focusKeyword || "").trim().toLowerCase();
+  const keyword = (values.focusKeyword || "").trim().toLowerCase();
   const title = values.title || "";
-  const metaTitle = values.seo?.metaTitle || `${title} — Md Shafiqur Rahman`;
-  const description = values.seo?.metaDescription || "";
+  const metaTitle = values.metaTitle || (title ? `${title} — Md Shafiqur Rahman` : "");
+  const description = values.metaDescription || "";
   const bodyText = textOf(values.body);
   const words = bodyText.split(/\s+/).filter(Boolean).length;
   const heads = headingsOf(values.body).join(" ").toLowerCase();
@@ -60,26 +106,26 @@ const SeoAnalysis = wrapFieldsWithMeta((props: any) => {
 
   const checks: [boolean, string][] = [
     [!!keyword, keyword ? `Focus keyword: "${keyword}"` : "Add a focus keyword"],
-    [has(title), "Focus keyword in the title (H1)"],
-    [has(metaTitle), "Focus keyword in the meta title"],
-    [has(description), "Focus keyword in the meta description"],
-    [!!keywordSlug && slug.includes(keywordSlug), "Focus keyword in the URL (slug)"],
-    [has(firstParagraph(values.body)), "Focus keyword in the first paragraph"],
-    [has(heads), "Focus keyword in an H2 or H3 heading"],
-    [!!keyword && density >= 0.5 && density <= 2.5, `Keyword density ${density.toFixed(1)}% (aim for 0.5–2.5%)`],
-    [metaTitle.length >= 30 && metaTitle.length <= 60, `Meta title length ${metaTitle.length} (aim for 30–60)`],
-    [description.length >= 120 && description.length <= 160, `Meta description length ${description.length} (aim for 120–160)`],
-    [words >= 600, `Content length ${words} words (aim for 600+)`],
-    [(values.faq || []).length > 0, "FAQ added (helps AI search and rich results)"],
+    [has(title), "Keyword in the title (H1)"],
+    [has(metaTitle), "Keyword in the meta title"],
+    [has(description), "Keyword in the meta description"],
+    [!!keywordSlug && slug.includes(keywordSlug), "Keyword in the URL (slug)"],
+    [has(firstParagraph(values.body)), "Keyword in the first paragraph"],
+    [has(heads), "Keyword in an H2 or H3 heading"],
+    [!!keyword && density >= 0.5 && density <= 2.5, `Keyword density ${density.toFixed(1)}% (0.5–2.5%)`],
+    [metaTitle.length >= 30 && metaTitle.length <= 60, `Meta title ${metaTitle.length} chars (30–60)`],
+    [description.length >= 120 && description.length <= 160, `Meta description ${description.length} chars (120–160)`],
+    [words >= 600, `Content ${words} words (600+)`],
+    [(values.faq || []).length > 0, "FAQ added"],
   ];
   const passed = checks.filter(([ok]) => ok).length;
   const score = Math.round((passed / checks.length) * 100);
 
-  const box = { border: "1px solid #e5e7eb", borderRadius: 8, background: "#fff", padding: 14, marginBottom: 12 };
+  const box = { border: "1px solid #e5e7eb", borderRadius: 8, background: "#f9fafb", padding: 12, marginBottom: 10 };
   return (
-    <div style={{ fontSize: 13, lineHeight: 1.45 }}>
+    <div style={{ fontSize: 12.5, lineHeight: 1.45, whiteSpace: "normal" }}>
       <div style={{ ...box, display: "flex", alignItems: "center", gap: 12 }}>
-        <div style={{ width: 52, height: 52, borderRadius: "50%", border: `4px solid ${colour(score)}`, display: "grid", placeItems: "center", fontWeight: 700, fontSize: 16, color: colour(score) }}>
+        <div style={{ width: 46, height: 46, flex: "none", borderRadius: "50%", border: `4px solid ${colour(score)}`, display: "grid", placeItems: "center", fontWeight: 700, fontSize: 15, color: colour(score) }}>
           {score}
         </div>
         <div>
@@ -89,15 +135,15 @@ const SeoAnalysis = wrapFieldsWithMeta((props: any) => {
       </div>
 
       <div style={box}>
-        <div style={{ color: "#6b7280", fontSize: 11, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".04em" }}>Google preview</div>
-        <div style={{ color: "#202124", fontSize: 12 }}>{`${SITE.replace("https://", "")} › blog › ${slug || "your-slug"}`}</div>
-        <div style={{ color: "#1a0dab", fontSize: 18, margin: "2px 0" }}>{metaTitle.length > 60 ? metaTitle.slice(0, 57) + "..." : metaTitle || "Your title"}</div>
+        <div style={{ color: "#6b7280", fontSize: 10.5, marginBottom: 6, textTransform: "uppercase", letterSpacing: ".04em" }}>Google preview</div>
+        <div style={{ color: "#202124", fontSize: 11.5, wordBreak: "break-all" }}>{`${SITE.replace("https://", "")} › blog › ${slug || "your-slug"}`}</div>
+        <div style={{ color: "#1a0dab", fontSize: 16, margin: "2px 0" }}>{metaTitle.length > 60 ? metaTitle.slice(0, 57) + "..." : metaTitle || "Your title"}</div>
         <div style={{ color: "#4d5156" }}>{description ? (description.length > 160 ? description.slice(0, 157) + "..." : description) : "Write a meta description so Google shows your own summary."}</div>
       </div>
 
       <ul style={{ ...box, listStyle: "none", margin: 0 }}>
         {checks.map(([ok, label]) => (
-          <li key={label} style={{ display: "flex", gap: 8, padding: "3px 0" }}>
+          <li key={label} style={{ display: "flex", gap: 7, padding: "2px 0" }}>
             <span style={{ color: ok ? "#16a34a" : "#dc2626", fontWeight: 700 }}>{ok ? "✓" : "✕"}</span>
             <span>{label}</span>
           </li>
@@ -105,6 +151,13 @@ const SeoAnalysis = wrapFieldsWithMeta((props: any) => {
       </ul>
     </div>
   );
+});
+
+const head = (name: string, label: string, icon: string, withCss = false) => ({
+  type: "string" as const,
+  name,
+  label,
+  ui: { component: SidebarHead(label, icon, withCss) },
 });
 
 export default defineConfig({
@@ -132,7 +185,9 @@ export default defineConfig({
         format: "md",
         defaultItem: () => ({
           published: false,
-          settings: { date: new Date().toISOString(), readTime: "5 min read", category: "automation" },
+          date: new Date().toISOString(),
+          readTime: "5 min read",
+          category: "automation",
         }),
         ui: {
           // The file name is the URL slug: /blog/<slug>/
@@ -143,6 +198,67 @@ export default defineConfig({
           },
         },
         fields: [
+          // ── Sidebar (floats right) ─────────────────────────────────────
+          head("sectionPublish", "Publish", "●", true),
+          {
+            type: "boolean",
+            name: "published",
+            label: "Published",
+            description: "Off = draft (saved, not shown on the website).",
+          },
+          { type: "datetime", name: "date", label: "Publish date", ui: { dateFormat: "YYYY-MM-DD" } },
+
+          head("sectionSeo", "SEO (Rank Math style)", "◎"),
+          {
+            type: "string",
+            name: "focusKeyword",
+            label: "Focus keyword",
+            description: 'The main search phrase, e.g. "cabinet maker seo".',
+          },
+          { type: "string", name: "seoAnalysis", label: "SEO analysis", ui: { component: SeoAnalysis } },
+          {
+            type: "string",
+            name: "metaTitle",
+            label: "Meta title",
+            description: "Shown in Google. Empty = article title. 30–60 characters.",
+          },
+          {
+            type: "string",
+            name: "metaDescription",
+            label: "Meta description",
+            required: true,
+            ui: { component: "textarea" },
+            description: "Shown in Google and on the blog list. 120–160 characters.",
+          },
+
+          head("sectionSettings", "Post settings", "▤"),
+          { type: "image", name: "image", label: "Featured image", description: "Top of the article and on the blog list." },
+          { type: "string", name: "imageAlt", label: "Featured image alt text" },
+          {
+            type: "string",
+            name: "category",
+            label: "Category",
+            options: [
+              { value: "local seo", label: "Local SEO" },
+              { value: "automation", label: "Automation" },
+              { value: "n8n", label: "n8n" },
+              { value: "ai", label: "AI & LLMs" },
+              { value: "ai automation", label: "AI Automation" },
+              { value: "lead generation", label: "Lead Gen" },
+              { value: "business", label: "Business" },
+              { value: "tutorial", label: "Tutorial" },
+            ],
+          },
+          { type: "string", name: "tags", label: "Tags", list: true, ui: { component: "tags" } },
+          { type: "string", name: "readTime", label: "Reading time", description: 'e.g. "8 min read".' },
+          { type: "boolean", name: "featured", label: "Featured" },
+
+          head("sectionSocial", "Social (Open Graph)", "↗"),
+          { type: "string", name: "ogTitle", label: "Social title", description: "Facebook, LinkedIn, X. Empty = meta title." },
+          { type: "string", name: "ogDescription", label: "Social description", ui: { component: "textarea" }, description: "Empty = meta description." },
+          { type: "image", name: "ogImage", label: "Social image", description: "1200 × 630 px. Empty = featured image." },
+
+          // ── Article (left column) ──────────────────────────────────────
           {
             type: "string",
             name: "title",
@@ -167,83 +283,6 @@ export default defineConfig({
             fields: [
               { type: "string", name: "question", label: "Question", required: true },
               { type: "string", name: "answer", label: "Answer", required: true, ui: { component: "textarea" } },
-            ],
-          },
-          {
-            type: "boolean",
-            name: "published",
-            label: "Published",
-            description: "Off = draft. Drafts are saved but not shown on the website.",
-          },
-          {
-            type: "object",
-            name: "seo",
-            label: "SEO — focus keyword, meta title & description",
-            fields: [
-              {
-                type: "string",
-                name: "focusKeyword",
-                label: "Focus keyword",
-                description: 'The main search phrase this article should rank for, e.g. "cabinet maker seo".',
-              },
-              {
-                type: "string",
-                name: "analysis",
-                label: "SEO analysis",
-                ui: { component: SeoAnalysis },
-              },
-              {
-                type: "string",
-                name: "metaTitle",
-                label: "Meta title",
-                description: "The title shown in Google. Leave empty to use the article title. Aim for 30–60 characters.",
-              },
-              {
-                type: "string",
-                name: "metaDescription",
-                label: "Meta description",
-                required: true,
-                ui: { component: "textarea" },
-                description: "Shown in Google and on the blog list. Aim for 120–160 characters.",
-              },
-            ],
-          },
-          {
-            type: "object",
-            name: "social",
-            label: "Social — Facebook, LinkedIn & X preview",
-            fields: [
-              { type: "string", name: "title", label: "Social title", description: "Leave empty to use the meta title." },
-              { type: "string", name: "description", label: "Social description", ui: { component: "textarea" }, description: "Leave empty to use the meta description." },
-              { type: "image", name: "image", label: "Social image", description: "1200 × 630 px works best. Leave empty to use the featured image." },
-            ],
-          },
-          {
-            type: "object",
-            name: "settings",
-            label: "Post settings — featured image, category, tags, date",
-            fields: [
-              { type: "image", name: "image", label: "Featured image", description: "Shown at the top of the article and on the blog list." },
-              { type: "string", name: "imageAlt", label: "Featured image alt text", description: "Describe the image for Google and screen readers." },
-              {
-                type: "string",
-                name: "category",
-                label: "Category",
-                options: [
-                  { value: "local seo", label: "Local SEO" },
-                  { value: "automation", label: "Automation" },
-                  { value: "n8n", label: "n8n" },
-                  { value: "ai", label: "AI & LLMs" },
-                  { value: "ai automation", label: "AI Automation" },
-                  { value: "lead generation", label: "Lead Gen" },
-                  { value: "business", label: "Business" },
-                  { value: "tutorial", label: "Tutorial" },
-                ],
-              },
-              { type: "string", name: "tags", label: "Tags", list: true, ui: { component: "tags" } },
-              { type: "datetime", name: "date", label: "Publish date", ui: { dateFormat: "YYYY-MM-DD" } },
-              { type: "string", name: "readTime", label: "Reading time", description: 'For example "8 min read".' },
-              { type: "boolean", name: "featured", label: "Featured" },
             ],
           },
         ],

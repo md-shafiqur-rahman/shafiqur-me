@@ -1,13 +1,11 @@
 ---
-title: How to Automate Lead Generation with AI in 2026 (Complete Guide)
 published: true
-seo:
-  metaDescription: Stop chasing leads manually. Learn how to build an AI-powered lead generation system using n8n, OpenAI, and CRM automation that captures, qualifies, and nurtures prospects on autopilot — 24/7.
-settings:
-  category: lead generation
-  date: '2026-03-19'
-  readTime: 14 min read
-  featured: true
+date: '2026-03-19'
+metaDescription: Stop chasing leads manually. Learn how to build an AI-powered lead generation system using n8n, OpenAI, and CRM automation that captures, qualifies, and nurtures prospects on autopilot — 24/7.
+category: lead generation
+readTime: 14 min read
+featured: true
+title: How to Automate Lead Generation with AI in 2026 (Complete Guide)
 ---
 
 Every business needs leads. But most businesses are still generating them the hard way — manually scraping contacts, sending cold emails one by one, and spending hours on follow-ups that go nowhere. In 2026, this approach is not just slow — it is a competitive disadvantage.

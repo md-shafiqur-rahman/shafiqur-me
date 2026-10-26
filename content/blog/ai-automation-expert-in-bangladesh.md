@@ -1,13 +1,11 @@
 ---
-title: 'AI Automation Expert in Bangladesh: How Shafiqur Rahman Is Transforming Local Businesses'
 published: true
-seo:
-  metaDescription: Looking for an AI automation expert in Bangladesh? Discover how Shafiqur Rahman helps Bangladeshi businesses eliminate manual work, cut costs, and scale smarter using n8n, AI agents, and intelligent workflow automation.
-settings:
-  category: AI Automation
-  date: '2026-03-11'
-  readTime: 8 min read
-  featured: true
+date: '2026-03-11'
+metaDescription: Looking for an AI automation expert in Bangladesh? Discover how Shafiqur Rahman helps Bangladeshi businesses eliminate manual work, cut costs, and scale smarter using n8n, AI agents, and intelligent workflow automation.
+category: AI Automation
+readTime: 8 min read
+featured: true
+title: 'AI Automation Expert in Bangladesh: How Shafiqur Rahman Is Transforming Local Businesses'
 ---
 
 The demand for **AI automation in Bangladesh** is growing fast — and for good reason. Businesses across Dhaka, Chittagong, and beyond are starting to realize that competing in 2026 means working smarter, not harder. But most local businesses still operate with slow, manual processes that cost them time, money, and clients every single day.

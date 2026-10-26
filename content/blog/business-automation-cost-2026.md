@@ -1,13 +1,11 @@
 ---
-title: How Much Does Business Automation Cost in 2026? (Real Pricing Breakdown)
 published: true
-seo:
-  metaDescription: Wondering what it costs to automate your business? Here's an honest, detailed pricing breakdown for n8n workflows, AI automation, chatbots, and CRM integrations — with real examples from client projects.
-settings:
-  category: business
-  date: '2026-03-17'
-  readTime: 11 min read
-  featured: false
+date: '2026-03-17'
+metaDescription: Wondering what it costs to automate your business? Here's an honest, detailed pricing breakdown for n8n workflows, AI automation, chatbots, and CRM integrations — with real examples from client projects.
+category: business
+readTime: 11 min read
+featured: false
+title: How Much Does Business Automation Cost in 2026? (Real Pricing Breakdown)
 ---
 
 "How much does automation cost?" is the first question every business owner asks — and the most common answer they get is a frustrating "it depends." While it genuinely does depend on complexity, scope, and requirements, you deserve actual numbers, not vague hand-waving.

@@ -1,13 +1,11 @@
 ---
-title: How to Automate 80% of Your Business Operations Using n8n
 published: true
-seo:
-  metaDescription: Most businesses waste hundreds of hours on repetitive tasks every month. Here's how I helped a SaaS company automate lead capture, onboarding, invoicing, and reporting — all with one tool.
-settings:
-  category: automation
-  date: '2026-02-28'
-  readTime: 8 min read
-  featured: false
+date: '2026-02-28'
+metaDescription: Most businesses waste hundreds of hours on repetitive tasks every month. Here's how I helped a SaaS company automate lead capture, onboarding, invoicing, and reporting — all with one tool.
+category: automation
+readTime: 8 min read
+featured: false
+title: How to Automate 80% of Your Business Operations Using n8n
 ---
 
 ## The Problem: Manual Work Is Killing Your Growth

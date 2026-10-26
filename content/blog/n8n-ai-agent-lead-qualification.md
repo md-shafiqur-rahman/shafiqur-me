@@ -1,13 +1,11 @@
 ---
-title: How to Build an n8n AI Agent for Lead Qualification
 published: true
-seo:
-  metaDescription: Learn how to build an n8n AI agent that enriches, scores, routes, and follows up with sales leads automatically—without turning your CRM into a black box.
-settings:
-  category: n8n
-  date: '2026-08-14'
-  readTime: 15 min read
-  featured: true
+date: '2026-08-14'
+metaDescription: Learn how to build an n8n AI agent that enriches, scores, routes, and follows up with sales leads automatically—without turning your CRM into a black box.
+category: n8n
+readTime: 15 min read
+featured: true
+title: How to Build an n8n AI Agent for Lead Qualification
 ---
 
 A new lead fills out your form. They leave a name, a business email, and one short message. Is this a serious buyer who needs a call today, a future customer who needs nurturing, or an irrelevant inquiry that should not consume your sales team's time?

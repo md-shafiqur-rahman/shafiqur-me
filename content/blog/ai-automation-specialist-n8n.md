@@ -1,13 +1,11 @@
 ---
-title: What Does an AI Automation Specialist Do with n8n? (Complete 2026 Guide)
 published: true
-seo:
-  metaDescription: An AI automation specialist using n8n can transform how your business runs — eliminating repetitive tasks, connecting apps intelligently, and deploying AI agents that work 24/7. Here's exactly what that looks like.
-settings:
-  category: n8n
-  date: '2026-03-08'
-  readTime: 12 min read
-  featured: true
+date: '2026-03-08'
+metaDescription: An AI automation specialist using n8n can transform how your business runs — eliminating repetitive tasks, connecting apps intelligently, and deploying AI agents that work 24/7. Here's exactly what that looks like.
+category: n8n
+readTime: 12 min read
+featured: true
+title: What Does an AI Automation Specialist Do with n8n? (Complete 2026 Guide)
 ---
 
 If you have been searching for an **AI automation specialist n8n** expert, you are probably already aware that automation is no longer optional — it is a business survival strategy. But what exactly does such a specialist do, how do they use n8n to deliver results, and is this the right investment for your business?

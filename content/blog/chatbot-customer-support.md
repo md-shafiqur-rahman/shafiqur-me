@@ -1,11 +1,13 @@
 ---
-title: "Building an AI Chatbot for Customer Support That Actually Works"
-excerpt: "Most chatbots are frustrating. Here's how to build one that understands context, retrieves accurate answers, and knows when to escalate."
-date: "2026-01-28"
-category: "ai"
-readTime: "8 min read"
-featured: false
+title: Building an AI Chatbot for Customer Support That Actually Works
 published: true
+seo:
+  metaDescription: Most chatbots are frustrating. Here's how to build one that understands context, retrieves accurate answers, and knows when to escalate.
+settings:
+  category: ai
+  date: '2026-01-28'
+  readTime: 8 min read
+  featured: false
 ---
 
 Bad chatbots are everywhere. They misunderstand questions, give generic responses, loop you through the same FAQ, and make you want to throw your computer out the window. But well-built AI chatbots — powered by RAG and proper escalation logic — deliver genuinely helpful support at scale.

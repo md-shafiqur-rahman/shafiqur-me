@@ -126,7 +126,7 @@ def ld(obj):
 urls = []
 
 
-def page(rel_dir, title, desc, body, active, og_type='website', schema=(), image=None, main_cls=''):
+def page(rel_dir, title, desc, body, active, og_type='website', schema=(), image=None, main_cls='', og_title=None, og_desc=None):
     rel_dir = rel_dir.strip('/')
     p = '../' * (rel_dir.count('/') + 1) if rel_dir else ''
     url = '%s/%s' % (SITE, rel_dir + '/' if rel_dir else '')
@@ -143,8 +143,8 @@ def page(rel_dir, title, desc, body, active, og_type='website', schema=(), image
     <meta property="og:type" content="%(og)s">
     <meta property="og:site_name" content="Md Shafiqur Rahman">
     <meta property="og:url" content="%(url)s">
-    <meta property="og:title" content="%(title)s">
-    <meta property="og:description" content="%(desc)s">
+    <meta property="og:title" content="%(og_title)s">
+    <meta property="og:description" content="%(og_desc)s">
     <meta property="og:image" content="%(image)s">
     <meta name="twitter:card" content="summary_large_image">
     <link rel="icon" type="image/png" href="%(p)simages/shafiqur-avatar.png">
@@ -169,7 +169,7 @@ def page(rel_dir, title, desc, body, active, og_type='website', schema=(), image
 </body>
 
 </html>
-''' % dict(title=esc(title), desc=esc(desc), url=url, og=og_type, p=p, theme=THEME_JS,
+''' % dict(title=esc(title), desc=esc(desc), og_title=esc(og_title or title), og_desc=esc(og_desc or desc), url=url, og=og_type, p=p, theme=THEME_JS,
            image=image or SITE + '/' + PHOTO, schema=''.join(ld(s) for s in schema),
            header=header(p, active), footer=footer(p), dock=DOCK,
            body=body, main_cls=' class="%s"' % main_cls if main_cls else '')
@@ -558,6 +558,28 @@ def post_faq(items):
     return '            <section class="post-faq">\n                <h2>Frequently asked questions</h2>\n' + faq_block(items).replace(' reveal', '') + '            </section>\n'
 
 
+def post_fields(d):
+    """Flatten the editor's SEO / social / settings groups; older posts keep flat fields."""
+    seo, social, st = d.get('seo') or {}, d.get('social') or {}, d.get('settings') or {}
+    d['excerpt'] = seo.get('metaDescription') or d.get('excerpt') or ''
+    d['seoTitle'] = seo.get('metaTitle') or d.get('seoTitle') or ''
+    d['focusKeyword'] = seo.get('focusKeyword') or ''
+    for k, default in (('date', ''), ('category', 'automation'), ('readTime', '5 min read'), ('featured', False)):
+        d[k] = st.get(k) if st.get(k) not in (None, '') else d.get(k, default)
+    d['date'] = str(d['date'])[:10]
+    d['image'] = st.get('image') or ''
+    d['imageAlt'] = st.get('imageAlt') or d['title']
+    d['tags'] = [t for t in (st.get('tags') or []) if t]
+    d['ogTitle'] = social.get('title') or ''
+    d['ogDesc'] = social.get('description') or ''
+    d['ogImage'] = social.get('image') or ''
+    return d
+
+
+abs_url = lambda path: path if path.startswith('http') else SITE + '/' + path.lstrip('/')
+site_path = lambda path, prefix: path if path.startswith('http') else prefix + path.lstrip('/')
+
+
 nice_date = lambda d: datetime.date.fromisoformat(d).strftime('%b %-d, %Y')
 TAGS = {'n8n': 'n8n', 'automation': 'Automation', 'ai': 'AI & LLMs', 'tutorial': 'Tutorial', 'business': 'Business',
         'lead generation': 'Lead Gen', 'ai automation': 'AI Automation', 'reporting': 'Reporting'}
@@ -568,6 +590,7 @@ for f in sorted(os.listdir(os.path.join(CONTENT, 'blog'))):
     if not f.endswith('.md'):
         continue
     data, body = front(os.path.join(CONTENT, 'blog', f))
+    data = post_fields(data)
     if data.get('published') is not False:
         data.update(slug=f[:-3], body=body); posts.append(data)
 posts.sort(key=lambda p: p['date'], reverse=True)
@@ -585,6 +608,10 @@ for p in posts:
             for f in (p.get('faq') or []) if f and f.get('question') and f.get('answer')]
     schema = [{'@context': 'https://schema.org', '@type': 'BlogPosting', 'headline': p['title'], 'description': p['excerpt'],
                'datePublished': p['date'], 'author': PERSON, 'mainEntityOfPage': '%s/%s/' % (SITE, rel)}]
+    if p['image']:
+        schema[0]['image'] = abs_url(p['image'])
+    if p['tags']:
+        schema[0]['keywords'] = ', '.join(p['tags'])
     if faqs:
         schema.append(faq_schema(faqs))
     body = '''        <article class="wrap wrap--narrow">
@@ -595,22 +622,29 @@ for p in posts:
                 <p class="post-head__lead">%s</p>
                 <p class="post-meta"><span>Md Shafiqur Rahman</span><span><time datetime="%s">%s</time></span><span>%s</span></p>
             </header>
-            <div class="prose">
+%s            <div class="prose">
 %s            </div>
-%s%s        </article>
+%s%s%s        </article>
 ''' % (esc(tag(p['category'])), esc(p['title']), esc(p['excerpt']), p['date'], nice_date(p['date']), esc(p.get('readTime', '5 min read')),
-       render(p['body'], '../../'), post_faq(faqs),
+       '            <img class="post-cover" src="%s" alt="%s">\n' % (esc(site_path(p['image'], '../../')), esc(p['imageAlt'])) if p['image'] else '',
+       render(p['body'], '../../'),
+       '            <ul class="post-tags">%s</ul>\n' % ''.join('<li>%s</li>' % esc(t) for t in p['tags']) if p['tags'] else '',
+       post_faq(faqs),
        cta_block('../../', 'Want this built for your business?', 'Book a free 30-minute strategy call. I\'ll audit your current workflows and show you exactly where automation can save you time and money.').replace('                ', '            ', 1))
     title = p.get('seoTitle') or '%s — Md Shafiqur Rahman' % p['title']
-    urls.append((page(rel, title, p['excerpt'], body, 'Blog', 'article', main_cls='page', schema=schema), p['date']))
+    share_img = p['ogImage'] or p['image']
+    urls.append((page(rel, title, p['excerpt'], body, 'Blog', 'article', main_cls='page', schema=schema,
+                      image=abs_url(share_img) if share_img else None, og_title=p['ogTitle'] or None, og_desc=p['ogDesc'] or None), p['date']))
 
-cards = ''.join('''                <a class="card post-card" href="%s/">
-                    <span class="tool-tag">%s</span>
+cards = ''.join('''                <a class="card post-card%s" href="%s/">
+%s                    <span class="tool-tag">%s</span>
                     <h2>%s</h2>
                     <p>%s</p>
                     <span class="post-meta"><span><time datetime="%s">%s</time></span><span>%s</span></span>
                 </a>
-''' % (p['slug'], esc(tag(p['category'])), esc(p['title']), esc(p['excerpt']), p['date'], nice_date(p['date']), esc(p.get('readTime', '5 min read'))) for p in posts)
+''' % (' post-card--img' if p['image'] else '', p['slug'],
+       '                    <img class="post-card__img" src="%s" alt="" loading="lazy">\n' % esc(site_path(p['image'], '../')) if p['image'] else '',
+       esc(tag(p['category'])), esc(p['title']), esc(p['excerpt']), p['date'], nice_date(p['date']), esc(p.get('readTime', '5 min read'))) for p in posts)
 urls.insert(3, (page('blog', 'Blog — AI Automation & Local SEO Insights | Md Shafiqur Rahman',
                      'Tutorials and guides on n8n, AI agents, workflow automation and local SEO for growing businesses.',
                      '''        <div class="wrap">

@@ -1,11 +1,13 @@
 ---
-title: "How to Calculate the ROI of Business Automation (With Real Numbers)"
-excerpt: "Is automation worth it? I break down the real costs, time savings, and revenue impact with actual examples from client projects."
-date: "2026-02-10"
-category: "business"
-readTime: "5 min read"
-featured: false
+title: How to Calculate the ROI of Business Automation (With Real Numbers)
 published: true
+seo:
+  metaDescription: Is automation worth it? I break down the real costs, time savings, and revenue impact with actual examples from client projects.
+settings:
+  category: business
+  date: '2026-02-10'
+  readTime: 5 min read
+  featured: false
 ---
 
 "Is automation actually worth it?" is the question every business owner asks before investing. The answer is almost always yes — but you need the numbers to prove it internally and to your stakeholders.

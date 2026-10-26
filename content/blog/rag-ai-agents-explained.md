@@ -1,11 +1,13 @@
 ---
-title: "RAG & AI Agents Explained: Build Smarter Automation with Context"
-excerpt: "What is Retrieval-Augmented Generation? How do AI agents actually work? A practical guide to building AI systems that understand your data."
-date: "2026-02-25"
-category: "ai"
-readTime: "6 min read"
-featured: false
+title: 'RAG & AI Agents Explained: Build Smarter Automation with Context'
 published: true
+seo:
+  metaDescription: What is Retrieval-Augmented Generation? How do AI agents actually work? A practical guide to building AI systems that understand your data.
+settings:
+  category: ai
+  date: '2026-02-25'
+  readTime: 6 min read
+  featured: false
 ---
 
 Most AI tools give you impressive-sounding outputs that are completely wrong. They hallucinate facts, misunderstand context, and confidently deliver inaccurate answers. The reason? They are working from static training data with no access to *your* information.

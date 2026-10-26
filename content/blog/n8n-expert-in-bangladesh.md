@@ -1,11 +1,13 @@
 ---
-title: "n8n Expert in Bangladesh: Scale Your Business with Advanced Workflow Automation"
-excerpt: "Looking for an n8n expert in Bangladesh? Discover how a professional n8n workflow specialist can help you automate complex business processes, reduce costs, and scale faster in 2026."
-date: "2026-03-17"
-category: "n8n"
-readTime: "10 min read"
-featured: true
+title: 'n8n Expert in Bangladesh: Scale Your Business with Advanced Workflow Automation'
 published: true
+seo:
+  metaDescription: Looking for an n8n expert in Bangladesh? Discover how a professional n8n workflow specialist can help you automate complex business processes, reduce costs, and scale faster in 2026.
+settings:
+  category: n8n
+  date: '2026-03-17'
+  readTime: 10 min read
+  featured: true
 ---
 
 In the rapidly evolving digital landscape of 2026, efficiency is no longer a luxury—it's a survival requirement. For businesses in Dhaka, Chittagong, and across the country, manual data entry and repetitive tasks are the silent killers of growth. This is where the power of **n8n** comes into play, and why finding a dedicated **n8n expert in Bangladesh** is becoming a top priority for forward-thinking entrepreneurs.

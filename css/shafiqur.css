@@ -657,6 +657,8 @@ html[data-theme="light"] .form__note.is-ok { color: #12813f; }
 .project-card h2 { font-size: 21px; line-height: 1.25; margin-bottom: 10px; }
 .post-card p { margin-bottom: 20px; }
 .post-card .post-meta { margin-top: auto; }
+.post-card--img { padding-top: 0; overflow: hidden; }
+.post-card__img { width: calc(100% + 56px); max-width: none; margin: 0 -28px 22px; aspect-ratio: 16 / 9; object-fit: cover; border-bottom: 1px solid var(--line); }
 
 .project-card { display: flex; flex-direction: column; padding: 0; overflow: hidden; }
 .project-card__cover { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; object-position: top left; border-bottom: 1px solid var(--line); background: var(--surface-2); }
@@ -730,6 +732,10 @@ html[data-theme="light"] .form__note.is-ok { color: #12813f; }
 
 #faq .post-cta { margin-top: 32px; }
 .post-faq { margin-top: 48px; }
+.post-cover { width: 100%; height: auto; margin: 0 0 36px; border: 1px solid var(--line); border-radius: var(--radius); }
+.post-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 32px; }
+.post-tags li { padding: 7px 12px; border: 1px solid var(--line-strong); border-radius: 999px; font: 500 13px/1 var(--font-mono); color: var(--muted); }
+.post-tags li::before { content: "#"; color: var(--accent); }
 .post-faq h2 { margin-bottom: 18px; font-size: clamp(24px, 3vw, 30px); }
 
 /* Floating chat + back to top -------------------------------------------- */

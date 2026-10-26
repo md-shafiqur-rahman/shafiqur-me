@@ -1,11 +1,13 @@
 ---
-title: "WhatsApp Business Automation with n8n: Complete Setup Guide for 2026"
-excerpt: "Automate WhatsApp messages, customer support, order notifications, and lead follow-ups using n8n. Save 15+ hours per week and never miss a customer message again."
-date: "2026-03-18"
-category: "automation"
-readTime: "12 min read"
-featured: false
+title: 'WhatsApp Business Automation with n8n: Complete Setup Guide for 2026'
 published: true
+seo:
+  metaDescription: Automate WhatsApp messages, customer support, order notifications, and lead follow-ups using n8n. Save 15+ hours per week and never miss a customer message again.
+settings:
+  category: automation
+  date: '2026-03-18'
+  readTime: 12 min read
+  featured: false
 ---
 
 WhatsApp is not just a messaging app anymore — it is the primary business communication channel for millions of companies worldwide. In South Asia, the Middle East, Latin America, and Africa, **WhatsApp is how business gets done**. Customers expect instant responses on WhatsApp, and businesses that respond slowly lose deals to competitors who respond in seconds.

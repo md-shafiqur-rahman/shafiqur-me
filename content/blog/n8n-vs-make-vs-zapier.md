@@ -1,11 +1,13 @@
 ---
-title: "n8n vs Make vs Zapier: Which Automation Tool is Right for You?"
-excerpt: "A detailed comparison of the three biggest automation platforms. Pricing, features, flexibility, and when to use each one."
-date: "2026-02-20"
-category: "n8n"
-readTime: "10 min read"
-featured: false
+title: 'n8n vs Make vs Zapier: Which Automation Tool is Right for You?'
 published: true
+seo:
+  metaDescription: A detailed comparison of the three biggest automation platforms. Pricing, features, flexibility, and when to use each one.
+settings:
+  category: n8n
+  date: '2026-02-20'
+  readTime: 10 min read
+  featured: false
 ---
 
 Choosing the right automation tool can make or break your workflow strategy. In 2026, the three dominant platforms are **n8n**, **Make (formerly Integromat)**, and **Zapier**. Each has a distinct position in the market — and the wrong choice leads to wasted money, locked-in workflows, and hitting the ceiling exactly when you need to scale.

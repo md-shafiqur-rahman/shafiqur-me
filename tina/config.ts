@@ -44,7 +44,6 @@ export default defineConfig({
                 .replace(/-+/g, "-"),
             description: "This is the slug. The article's address will be shafiqur.me/blog/<slug>/. Don't change it after publishing.",
           },
-          router: ({ document }) => `/blog/${document._sys.filename}/`,
         },
         fields: [
           {

@@ -25,7 +25,7 @@ npm install
 npm run dev
 ```
 
-Then open http://localhost:8766/admin/index.html
+Then open http://localhost:8766/admin/index.html#/collections/post and click "Enter Edit Mode".
 
 ## Build
 

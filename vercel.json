@@ -15,6 +15,16 @@
       "source": "/admin/",
       "destination": "/admin/index.html#/collections/post",
       "permanent": false
+    },
+    {
+      "source": "/profile.png",
+      "destination": "/images/md-shafiqur-rahman-n8n-ai-automation-expert.jpg",
+      "permanent": true
+    },
+    {
+      "source": "/logo-shafiqur.png",
+      "destination": "/images/shafiqur-avatar.png",
+      "permanent": true
     }
   ]
 }

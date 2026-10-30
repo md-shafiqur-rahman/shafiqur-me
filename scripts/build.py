@@ -577,7 +577,7 @@ def post_fields(d):
     pick = lambda *vals, default='': next((v for v in vals if v not in (None, '')), default)
     d['excerpt'] = pick(d.get('metaDescription'), seo.get('metaDescription'), d.get('excerpt'))
     d['seoTitle'] = pick(d.get('metaTitle'), seo.get('metaTitle'), d.get('seoTitle'))
-    d['date'] = local_day(pick(d.get('date'), st.get('date')))
+    d['date'] = local_day(pick(d.get('date'), st.get('date'))) or datetime.date.today().isoformat()
     d['category'] = pick(d.get('category'), st.get('category'), default='automation')
     d['readTime'] = pick(d.get('readTime'), st.get('readTime'), default='5 min read')
     d['featured'] = bool(pick(d.get('featured'), st.get('featured'), default=False))
@@ -603,7 +603,7 @@ site_path = lambda path, prefix: path if path.startswith('http') else prefix + p
 
 
 nice_date = lambda d: datetime.date.fromisoformat(d).strftime('%b %-d, %Y')
-TAGS = {'n8n': 'n8n', 'automation': 'Automation', 'ai': 'AI & LLMs', 'tutorial': 'Tutorial', 'business': 'Business',
+TAGS = {'n8n': 'n8n', 'local seo': 'Local SEO', 'automation': 'Automation', 'ai': 'AI & LLMs', 'tutorial': 'Tutorial', 'business': 'Business',
         'lead generation': 'Lead Gen', 'ai automation': 'AI Automation', 'reporting': 'Reporting'}
 tag = lambda c: TAGS.get(c.lower(), c)
 
@@ -630,14 +630,27 @@ for p in posts:
     rel = 'blog/' + p['slug']
     faqs = [(f['question'], '<p>%s</p>' % esc(f['answer']).replace('\n\n', '</p><p>').replace('\n', '<br>'))
             for f in (p.get('faq') or []) if f and f.get('question') and f.get('answer')]
-    schema = [{'@context': 'https://schema.org', '@type': 'BlogPosting', 'headline': p['title'], 'description': p['excerpt'],
-               'datePublished': p['date'], 'author': PERSON, 'mainEntityOfPage': '%s/%s/' % (SITE, rel)}]
-    if p['image']:
-        schema[0]['image'] = abs_url(p['image'])
-    if p['tags']:
-        schema[0]['keywords'] = ', '.join(p['tags'])
+    url = '%s/%s/' % (SITE, rel)
+    schema = [{'@context': 'https://schema.org', '@type': p.get('schemaType') or 'BlogPosting', 'headline': p['title'],
+               'description': p['excerpt'], 'image': abs_url(p['image'] or PHOTO), 'datePublished': p['date'],
+               'dateModified': p['date'], 'author': PERSON, 'publisher': PERSON, 'mainEntityOfPage': url,
+               'articleSection': tag(p['category']), 'wordCount': len(re.sub(r'[#*_`>|\[\]()-]', ' ', p['body']).split()),
+               'inLanguage': 'en'},
+              {'@context': 'https://schema.org', '@type': 'BreadcrumbList', 'itemListElement': [
+                  {'@type': 'ListItem', 'position': 1, 'name': 'Home', 'item': SITE + '/'},
+                  {'@type': 'ListItem', 'position': 2, 'name': 'Blog', 'item': SITE + '/blog/'},
+                  {'@type': 'ListItem', 'position': 3, 'name': p['title'], 'item': url}]}]
+    keywords = [k for k in [p.get('focusKeyword')] + p['tags'] if k]
+    if keywords:
+        schema[0]['keywords'] = ', '.join(keywords)
     if faqs:
         schema.append(faq_schema(faqs))
+    if (p.get('customSchema') or '').strip():
+        try:
+            custom = json.loads(p['customSchema'])
+            schema += [dict({'@context': 'https://schema.org'}, **c) for c in (custom if isinstance(custom, list) else [custom])]
+        except (ValueError, TypeError) as e:
+            print('WARNING: %s: custom schema is not valid JSON, skipped (%s)' % (p['slug'], e))
     body = '''        <article class="wrap wrap--narrow">
             <a class="crumb" href="../"><i class="fa-solid fa-arrow-left"></i> All articles</a>
             <header class="post-head">

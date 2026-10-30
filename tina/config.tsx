@@ -362,6 +362,26 @@ export default defineConfig({
           { type: "string", name: "readTime", label: "Reading time", description: 'e.g. "8 min read".' },
           { type: "boolean", name: "featured", label: "Featured" },
 
+          head("sectionSchema", "Schema", "{}"),
+          {
+            type: "string",
+            name: "schemaType",
+            label: "Article type",
+            description: "Blog post suits almost every article. News article is only for time-sensitive news.",
+            options: [
+              { value: "BlogPosting", label: "Blog post (default)" },
+              { value: "Article", label: "Article" },
+              { value: "NewsArticle", label: "News article" },
+            ],
+          },
+          {
+            type: "string",
+            name: "customSchema",
+            label: "Custom schema (JSON-LD)",
+            ui: { component: "textarea" },
+            description: "Optional, for extra types like HowTo or Review. Paste the JSON only, without <script> tags. Article, FAQ, author and breadcrumb schema are added automatically.",
+          },
+
           head("sectionSocial", "Social (Open Graph)", "↗"),
           { type: "string", name: "ogTitle", label: "Social title", description: "Facebook, LinkedIn, X. Empty = meta title." },
           { type: "string", name: "ogDescription", label: "Social description", ui: { component: "textarea" }, description: "Empty = meta description." },

@@ -278,6 +278,11 @@ export default defineConfig({
             name: "body",
             label: "Content",
             isBody: true,
+            description: "To paste Markdown (e.g. from ChatGPT), click the Markdown button in the toolbar first.",
+            // "raw" comes first so the Markdown button never hides in the overflow menu.
+            overrides: {
+              toolbar: ["raw", "heading", "bold", "italic", "link", "ul", "ol", "quote", "image", "table", "code", "hr"],
+            },
           },
           {
             type: "object",

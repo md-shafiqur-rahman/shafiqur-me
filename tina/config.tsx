@@ -171,6 +171,98 @@ const SeoAnalysis = wrapFieldsWithMeta((props: any) => {
   );
 });
 
+// ── FAQ: every question and answer edited in place, plus a bulk paste from AI ──
+
+type Faq = { question?: string; answer?: string };
+
+// Reads "Q: …? / A: …", "### …?" or "**…?**" style FAQs: a line ending in "?" (or starting
+// with "Q:") opens a new question, and the lines after it, up to the next one, are its answer.
+const parseFaqs = (text: string): Faq[] => {
+  const items: Faq[] = [];
+  const clean = (line: string) =>
+    line.replace(/\*\*|__/g, "").replace(/^\s*(#+|[-*]|\d+[.)])\s*/, "").replace(/^\s*(Q|Question)\s*[:.]\s*/i, "").trim();
+  for (const raw of text.split("\n")) {
+    const line = raw.trim();
+    if (!line || /^#*\s*(FAQ|Frequently asked questions)/i.test(clean(line)) && !line.endsWith("?")) continue;
+    const isQuestion = /^\s*(#+\s*|\*\*|\d+[.)]\s*)?(Q|Question)\s*[:.]/i.test(line) || clean(line).endsWith("?");
+    if (isQuestion) {
+      items.push({ question: clean(line), answer: "" });
+    } else if (items.length) {
+      const text = line.replace(/\*\*|__/g, "").replace(/^\s*(A|Answer)\s*[:.]\s*/i, "");
+      const last = items[items.length - 1];
+      last.answer = last.answer ? `${last.answer}\n\n${text}` : text;
+    }
+  }
+  return items.filter((f) => f.question && f.answer);
+};
+
+const box: React.CSSProperties = {
+  width: "100%", padding: "8px 10px", border: "1px solid #e5e7eb", borderRadius: 6,
+  fontSize: 14, background: "#fff", fontFamily: "inherit",
+};
+const smallBtn: React.CSSProperties = {
+  padding: "6px 12px", borderRadius: 6, border: "1px solid #e5e7eb", background: "#fff",
+  fontSize: 13, cursor: "pointer", fontWeight: 500,
+};
+
+const FaqEditor = wrapFieldsWithMeta((props: any) => {
+  const items: Faq[] = Array.isArray(props.input.value) ? props.input.value : [];
+  const [bulk, setBulk] = React.useState<string | null>(null);
+  const set = (next: Faq[]) => props.input.onChange(next);
+  const edit = (i: number, key: keyof Faq, value: string) =>
+    set(items.map((f, n) => (n === i ? { ...f, [key]: value } : f)));
+  const move = (i: number, by: number) => {
+    const next = [...items];
+    [next[i], next[i + by]] = [next[i + by], next[i]];
+    set(next);
+  };
+  const found = bulk ? parseFaqs(bulk) : [];
+
+  return (
+    <div data-test="list-faq" style={{ display: "grid", gap: 12 }}>
+      {items.map((f, i) => (
+        <div key={i} style={{ border: "1px solid #e5e7eb", borderRadius: 8, padding: 12, background: "#fafafa", display: "grid", gap: 8 }}>
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <strong style={{ fontSize: 13, color: "#6b7280", minWidth: 22 }}>{i + 1}.</strong>
+            <input style={box} placeholder="Question" value={f.question || ""} onChange={(e) => edit(i, "question", e.target.value)} />
+            <button type="button" style={smallBtn} disabled={i === 0} onClick={() => move(i, -1)} title="Move up">↑</button>
+            <button type="button" style={smallBtn} disabled={i === items.length - 1} onClick={() => move(i, 1)} title="Move down">↓</button>
+            <button type="button" style={{ ...smallBtn, color: "#dc2626" }} onClick={() => set(items.filter((_, n) => n !== i))} title="Remove">✕</button>
+          </div>
+          <textarea style={{ ...box, minHeight: 80, resize: "vertical" }} placeholder="Answer" value={f.answer || ""} onChange={(e) => edit(i, "answer", e.target.value)} />
+        </div>
+      ))}
+      <div style={{ display: "flex", gap: 8 }}>
+        <button type="button" style={smallBtn} onClick={() => set([...items, { question: "", answer: "" }])}>+ Add question</button>
+        <button type="button" style={smallBtn} onClick={() => setBulk(bulk === null ? "" : null)}>
+          {bulk === null ? "Paste FAQs from AI" : "Close paste box"}
+        </button>
+      </div>
+      {bulk !== null && (
+        <div style={{ display: "grid", gap: 8 }}>
+          <textarea
+            style={{ ...box, minHeight: 180, fontFamily: "ui-monospace, monospace", fontSize: 13 }}
+            placeholder={"Paste the whole FAQ here, for example:\n\n### What is local SEO?\nLocal SEO helps nearby customers find you.\n\n### How long does it take?\nUsually 3–6 months."}
+            value={bulk}
+            onChange={(e) => setBulk(e.target.value)}
+          />
+          <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+            <button
+              type="button"
+              style={{ ...smallBtn, background: "#ec4815", borderColor: "#ec4815", color: "#fff" }}
+              disabled={!found.length}
+              onClick={() => { set([...items.filter((f) => f.question || f.answer), ...found]); setBulk(null); }}
+            >
+              Add {found.length} question{found.length === 1 ? "" : "s"}
+            </button>
+            <span style={{ fontSize: 12, color: "#6b7280" }}>Each question must end with "?" or start with "Q:".</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+});
+
 const head = (name: string, label: string, icon: string, withCss = false) => ({
   type: "string" as const,
   name,
@@ -301,7 +393,7 @@ export default defineConfig({
             label: "FAQ (questions & answers)",
             list: true,
             description: "Shown at the end of the article and added as FAQ schema for Google and AI search.",
-            ui: { itemProps: (item) => ({ label: item?.question || "New question" }) },
+            ui: { component: FaqEditor },
             fields: [
               { type: "string", name: "question", label: "Question" },
               { type: "string", name: "answer", label: "Answer", ui: { component: "textarea" } },

@@ -5,6 +5,10 @@ focusKeyword: Local SEO for Small Businesses
 metaTitle: 'Local SEO for Small Businesses: 10 Strategies for USA & UK'
 metaDescription: 'Discover 10 local SEO strategies for small businesses in the USA and UK. Improve Google Maps visibility, attract local customers, and generate more leads.'
 category: local seo
+tags:
+  - Small Business SEO
+  - Local Search Optimization
+  - Google Maps SEO
 readTime: 5 min read
 title: 'Local SEO for Small Businesses in the USA and UK: 10 Strategies to Get More Local Customers'
 faq:

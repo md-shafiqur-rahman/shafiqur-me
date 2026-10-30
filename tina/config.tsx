@@ -23,6 +23,7 @@ const LIST = 'div.flex-wrap:has(> div input[name="title"])';
 const MAIN = [
   ':has(input[name="title"])',
   ":has([data-slate-editor])",
+  ':has(label[for="body"])', // also matches in Raw Markdown mode, when the Slate editor is gone
   ':has([data-test="list-faq"])',
   '[data-test="list-faq"]',
 ]

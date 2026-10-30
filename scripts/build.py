@@ -545,11 +545,22 @@ def front(path):
     return data, m.group(2)
 
 
-def render(body, prefix):
+def render(body, prefix, nofollow=(), nofollow_all=False):
+    """Markdown to HTML. External links open in a new tab and stay dofollow unless the post lists
+    their domain or URL under nofollow, or sets nofollow_all."""
     out = md.render(body)
-    out = re.sub(r'href="(?:https?://shafiqur\.dev)?/(blog|projects)/([\w-]+)/?"', lambda m: 'href="%s%s/%s/"' % (prefix, m.group(1), m.group(2)), out)
+    out = re.sub(r'href="(?:https?://(?:www\.)?shafiqur\.(?:dev|me))?/(blog|projects)/([\w-]+)/?"', lambda m: 'href="%s%s/%s/"' % (prefix, m.group(1), m.group(2)), out)
     out = out.replace('<table>', '<div class="table-wrap"><table>').replace('</table>', '</table></div>')
-    return re.sub(r'<a href="(https?://[^"]+)"', r'<a href="\1" target="_blank" rel="noopener noreferrer"', out)
+    rules = [r.strip().lower().replace('https://', '').replace('http://', '').replace('www.', '').rstrip('/') for r in nofollow if r and r.strip()]
+
+    def external(m):
+        url = m.group(1)
+        if re.match(r'https?://(www\.)?shafiqur\.me(/|$)', url):
+            return '<a href="%s"' % url
+        bare = re.sub(r'^https?://(www\.)?', '', url.lower()).rstrip('/')
+        follow = not nofollow_all and not any(bare == r or bare.startswith(r + '/') or bare.split('/')[0].endswith('.' + r) for r in rules)
+        return '<a href="%s" target="_blank" rel="%snoopener noreferrer"' % (url, '' if follow else 'nofollow ')
+    return re.sub(r'<a href="(https?://[^"]+)"', external, out)
 
 
 def post_faq(items):
@@ -664,7 +675,7 @@ for p in posts:
 %s%s%s        </article>
 ''' % (esc(tag(p['category'])), esc(p['title']), esc(p['excerpt']), p['date'], nice_date(p['date']), esc(p.get('readTime', '5 min read')),
        '            <img class="post-cover" src="%s" alt="%s">\n' % (esc(site_path(p['image'], '../../')), esc(p['imageAlt'])) if p['image'] else '',
-       render(p['body'], '../../'),
+       render(p['body'], '../../', p.get('nofollowLinks') or [], bool(p.get('nofollowAll'))),
        '            <ul class="post-tags">%s</ul>\n' % ''.join('<li>%s</li>' % esc(t) for t in p['tags']) if p['tags'] else '',
        post_faq(faqs),
        cta_block('../../', 'Want this built for your business?', 'Book a free 30-minute strategy call. I\'ll audit your current workflows and show you exactly where automation can save you time and money.').replace('                ', '            ', 1))

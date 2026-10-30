@@ -88,6 +88,15 @@ const textOf = (node?: Node): string =>
 const headingsOf = (root?: Node): string[] =>
   (root?.children || []).filter((n) => n.type === "h2" || n.type === "h3").map(textOf);
 
+type LinkNode = Node & { url?: string };
+const linksOf = (node?: LinkNode): string[] =>
+  !node ? [] : [...(node.type === "a" && node.url ? [node.url] : []), ...(node.children || []).flatMap(linksOf)];
+const isInternal = (url: string) => !/^https?:\/\//i.test(url) || /^https?:\/\/(www\.)?shafiqur\.me(\/|$)/i.test(url);
+const bare = (url: string) => url.toLowerCase().replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "");
+// Same matching as scripts/build.py: a rule is a domain (also covers subdomains) or a URL prefix.
+const isNofollow = (url: string, rules: string[], all: boolean) =>
+  all || rules.map(bare).filter(Boolean).some((r) => bare(url) === r || bare(url).startsWith(r + "/") || bare(url).split("/")[0].endsWith("." + r));
+
 const firstParagraph = (root?: Node): string =>
   textOf((root?.children || []).find((n) => n.type === "p"));
 
@@ -121,6 +130,10 @@ const SeoAnalysis = wrapFieldsWithMeta((props: any) => {
   const density = words ? (hits / words) * 100 : 0;
   const has = (s: string) => !!keyword && s.toLowerCase().includes(keyword);
   const keywordSlug = slugify(keyword);
+  const links = linksOf(values.body);
+  const internal = links.filter(isInternal);
+  const external = links.filter((u) => !isInternal(u));
+  const nofollowed = external.filter((u) => isNofollow(u, values.nofollowLinks || [], !!values.nofollowAll));
 
   const checks: [boolean, string][] = [
     [!!keyword, keyword ? `Focus keyword: "${keyword}"` : "Add a focus keyword"],
@@ -135,6 +148,10 @@ const SeoAnalysis = wrapFieldsWithMeta((props: any) => {
     [description.length >= 120 && description.length <= 160, `Meta description ${description.length} chars (120–160)`],
     [words >= 600, `Content ${words} words (600+)`],
     [(values.faq || []).length > 0, "FAQ added"],
+    [internal.length > 0, internal.length ? `Internal links: ${internal.length}` : "Add a link to another page on shafiqur.me"],
+    [external.length > 0, external.length
+      ? `External links: ${external.length} (${external.length - nofollowed.length} dofollow, ${nofollowed.length} nofollow)`
+      : "Add a link to a trusted outside source"],
   ];
   const passed = checks.filter(([ok]) => ok).length;
   const score = Math.round((passed / checks.length) * 100);
@@ -362,6 +379,22 @@ export default defineConfig({
           { type: "string", name: "readTime", label: "Reading time", description: 'e.g. "8 min read".' },
           { type: "boolean", name: "featured", label: "Featured" },
 
+          head("sectionLinks", "Links", "🔗"),
+          {
+            type: "boolean",
+            name: "nofollowAll",
+            label: "Nofollow all external links",
+            description: "Off = external links are dofollow, except the ones listed below.",
+          },
+          {
+            type: "string",
+            name: "nofollowLinks",
+            label: "Nofollow these links",
+            list: true,
+            ui: { component: "tags" },
+            description: 'A domain (e.g. "example.com", covers the whole site) or a full URL. Type it and press Enter. Links to shafiqur.me are always dofollow.',
+          },
+
           head("sectionSchema", "Schema", "{}"),
           {
             type: "string",
@@ -379,7 +412,7 @@ export default defineConfig({
             name: "customSchema",
             label: "Custom schema (JSON-LD)",
             ui: { component: "textarea" },
-            description: "Optional, for extra types like HowTo or Review. Paste the JSON only, without <script> tags. Article, FAQ, author and breadcrumb schema are added automatically.",
+            description: "Optional, for extra types like HowTo or Review. Paste the JSON only, without the script tags. Article, FAQ, author and breadcrumb schema are added automatically.",
           },
 
           head("sectionSocial", "Social (Open Graph)", "↗"),

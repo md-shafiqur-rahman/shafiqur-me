@@ -1,6 +1,6 @@
 ---
 published: false
-date: 2026-10-30T18:28:02.645Z
+date: '2026-10-30T18:28:02.645Z'
 metaTitle: 'Local SEO for Small Businesses: 10 Strategies for USA & UK'
 metaDescription: 'Discover 10 local SEO strategies for small businesses in the USA and UK. Improve Google Maps visibility, attract local customers, and generate more leads.'
 category: automation
@@ -13,6 +13,7 @@ faq:
 
       It includes optimizing business information, website content, local keywords, reviews, and relevant online listings.
 ---
+
 
 ## Introduction
 

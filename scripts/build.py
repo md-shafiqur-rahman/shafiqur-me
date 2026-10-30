@@ -590,6 +590,14 @@ def post_fields(d):
     return d
 
 
+def summary(body, limit=155):
+    """Fallback meta description: the article's first paragraph, cut at a word boundary."""
+    para = next((b for b in body.split('\n\n') if b.strip() and not b.lstrip().startswith(('#', '!', '-', '*', '>', '|', '<'))), '')
+    text = re.sub(r'\[([^\]]*)\]\([^)]*\)', r'\1', para)
+    text = re.sub(r'[*_`]', '', ' '.join(text.split()))
+    return text if len(text) <= limit else text[:limit].rsplit(' ', 1)[0] + '…'
+
+
 abs_url = lambda path: path if path.startswith('http') else SITE + '/' + path.lstrip('/')
 site_path = lambda path, prefix: path if path.startswith('http') else prefix + path.lstrip('/')
 
@@ -605,6 +613,8 @@ for f in sorted(os.listdir(os.path.join(CONTENT, 'blog'))):
         continue
     data, body = front(os.path.join(CONTENT, 'blog', f))
     data = post_fields(data)
+    if not data['excerpt']:
+        data['excerpt'] = summary(body)
     if data.get('published') is not False:
         data.update(slug=f[:-3], body=body); posts.append(data)
 posts.sort(key=lambda p: p['date'], reverse=True)

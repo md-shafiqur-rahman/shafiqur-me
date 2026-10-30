@@ -233,9 +233,8 @@ export default defineConfig({
             type: "string",
             name: "metaDescription",
             label: "Meta description",
-            required: true,
             ui: { component: "textarea" },
-            description: "Shown in Google and on the blog list. 120–160 characters.",
+            description: "Shown in Google and on the blog list. 120–160 characters. Empty = the first paragraph.",
           },
 
           head("sectionSettings", "Post settings", "▤"),
@@ -293,8 +292,8 @@ export default defineConfig({
             description: "Shown at the end of the article and added as FAQ schema for Google and AI search.",
             ui: { itemProps: (item) => ({ label: item?.question || "New question" }) },
             fields: [
-              { type: "string", name: "question", label: "Question", required: true },
-              { type: "string", name: "answer", label: "Answer", required: true, ui: { component: "textarea" } },
+              { type: "string", name: "question", label: "Question" },
+              { type: "string", name: "answer", label: "Answer", ui: { component: "textarea" } },
             ],
           },
         ],

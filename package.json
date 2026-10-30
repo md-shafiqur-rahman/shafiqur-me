@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "dev": "tinacms dev -c \"python3 -m http.server 8766\"",
-    "build": "(tinacms build || (echo 'Waiting for Tina Cloud to index the new schema...' && sleep 60 && tinacms build) || (sleep 90 && tinacms build)) && python3 scripts/build.py && python3 scripts/dist.py",
+    "build": "tinacms build && python3 scripts/build.py && python3 scripts/dist.py",
     "build:local": "tinacms build --local --skip-cloud-checks && python3 scripts/build.py && python3 scripts/dist.py"
   },
   "dependencies": {

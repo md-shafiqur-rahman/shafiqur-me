@@ -11,10 +11,12 @@ import { defineConfig, wrapFieldsWithMeta } from "tinacms";
 const SITE = "https://shafiqur.me";
 
 // Tina lists posts A–Z by title and has no setting for the default order. It keeps the
-// "Sort by" choice in localStorage, so seed that with newest first; picking another order still sticks.
+// "Sort by" choice in localStorage, so replace a missing or "Default" choice with newest first;
+// picking any field order still sticks.
 try {
   const SORT_KEY = "tinacms.admin.collection.list.page.post";
-  if (typeof window !== "undefined" && !window.localStorage.getItem(SORT_KEY)) {
+  const saved = typeof window !== "undefined" ? window.localStorage.getItem(SORT_KEY) : "unset";
+  if (!saved || !JSON.parse(saved).name) {
     window.localStorage.setItem(SORT_KEY, JSON.stringify({ name: "date", order: "desc" }));
   }
 } catch (e) {}
